@@ -1,25 +1,39 @@
 import React, { Component } from 'react';
+import {Route, Link} from 'react-router-dom';
 
 class Navbar extends Component {
+
   handleClick(page) {
-    this.props.goto_page({'page': page});
+    switch (page) {
+      case 'home':
+        this.props.goto_page({'page': page, 'name': 'Home'});
+      break;
+      case 'about':
+        this.props.goto_page({'page': page, 'name': 'About'});
+      break;
+      case 'search':
+        console.log('searching');
+        //this.props.history.push('/search');
+        //this.props.goto_page({'page': page, 'name': 'Search'});
+      break;
+      default:
+        this.props.goto_page({'page': 'home', 'name': 'Home'});
+    }
   }
 
   render() {
     let tabs = [
-      <li className={(this.props.page==='home')?"nav-link active":"nav-link"}
-              onClick={this.handleClick.bind(this, 'home')}>
-        <a className="nav-link" sref="home">Home{(this.props.page==='home')?<span className="sr-only">(current)</span>:""}</a>
+      <li className={(this.props.page==='home')?"nav-link active":"nav-link"}>
+        <Link to="home" className="nav-link" sref="home">Home{(this.props.page==='home')?<span className="sr-only">(current)</span>:""}</Link>
       </li>,
-      <li className={(this.props.page==='about')?"nav-link active":"nav-link"}
-              onClick={this.handleClick.bind(this, 'about')}>
-        <a className="nav-link" sref="about">About{(this.props.page==='about')?<span className="sr-only">(current)</span>:""}</a>
+      <li className={(this.props.page==='about')?"nav-link active":"nav-link"}>
+        <Link to="about" className="nav-link" sref="about">About{(this.props.page==='about')?<span className="sr-only">(current)</span>:""}</Link>
       </li>
     ];
     return (
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <a className="navbar-brand"
-              onClick={this.handleClick.bind(this, 'home')}>ECommerce</a>
+      <nav className="navbar navbar-expand-sm navbar-light bg-light">
+        <Link className="navbar-brand"
+              to="home">ECommerce</Link>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -29,9 +43,20 @@ class Navbar extends Component {
             {tabs}
           </ul>
           <div className="form-inline my-2 my-lg-0">
-            <input id="search" className="form-control mr-sm-2"
-                  type="search" placeholder="Search" aria-label="Search"
-                  onChange={this.handleClick.bind(this, 'search')}/>
+            <Route render={({history}) => (
+              <input id="search" className="form-control mr-sm-2"
+                    type="search" placeholder="Search" aria-label="Search"
+                    onChange={() => {
+                          let search_term = document.querySelector('#search').value;
+                          if (search_term === '')
+                            history.push('/home');
+                          else
+                            history.push('/search');
+
+                          this.props.search2(search_term);
+                    }}/>
+
+            )} />
             <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Cart</button>
           </div>
         </div>

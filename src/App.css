@@ -34,3 +34,7 @@ button, a {
 #search {
   width: calc(100% - 80px);
 }
+
+.nav-link {
+  transition: all 0.4s;
+}
