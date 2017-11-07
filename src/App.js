@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import Navbar from './Components/Navbar'
-import logo from './logo.svg';
 import './App.css';
+import Navbar from './Components/Navbar'
+import Home from './Components/Home'
+import About from './Components/About'
+import Search from './Components/Search'
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      'page': this.get_page_from_url(),
+      'page': this.get_page_from_url()
     }
   }
 
@@ -18,22 +20,35 @@ class App extends Component {
     return document.location.pathname.split('/')[1];
   }
 
-  handleTabClicked(data) {
-    this.setState({'page': data['page']});
+  handleGotoPage(data) {
+    let for_state = {'page': data['page']};
+    if (data['page'] === 'search')
+      for_state['search_term'] = document.querySelector('#search').value;
+    this.setState(for_state, () => console.log(this.state));
   }
 
   render() {
+    let main_view;
+
+    switch(this.state.page) {
+      case 'home':
+        main_view = <Home />;
+      break;
+      case 'about':
+        main_view = <About />;
+      break;
+      case 'search':
+        main_view = <Search search_term={this.state.search_term} />;
+      break;
+      default:
+        main_view = <Home />;
+    }
+
     return (
       <div className="App">
         <Navbar page={this.state.page}
-                tab_clicked={this.handleTabClicked.bind(this)} />
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+                goto_page={this.handleGotoPage.bind(this)} />
+        {main_view}
       </div>
     );
   }

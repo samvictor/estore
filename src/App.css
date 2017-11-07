@@ -32,5 +32,5 @@ button, a {
 }
 
 #search {
-  width: calc(100% - 100px);
+  width: calc(100% - 80px);
 }
