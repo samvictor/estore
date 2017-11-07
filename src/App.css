@@ -26,3 +26,11 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+button, a {
+  cursor: pointer;
+}
+
+#search {
+  width: calc(100% - 100px);
+}
