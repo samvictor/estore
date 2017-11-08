@@ -1,7 +1,19 @@
 import React, { Component } from 'react';
 import {Route, Link} from 'react-router-dom';
+import $ from 'jquery';
+/*global firebase*/
 
 class Navbar extends Component {
+  signOut() {
+    firebase.auth().signOut().then(function() {
+      // Sign-out successful.
+      $('#alert_success').text('You are logged out')
+          .fadeIn().delay(4000).fadeOut();
+    }).catch(function(error) {
+      console.log('signout failed', error);
+    });
+
+  }
   render() {
     let tabs = [
       <li className={(this.props.page==='home')?"nav-link active":"nav-link"}>
@@ -23,7 +35,8 @@ class Navbar extends Component {
         <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Login / Signup</button>
       </Link>;
     else
-      login_btn = <button id="logout" className="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>;
+      login_btn = <button id="logout" className="btn btn-outline-danger my-2 my-sm-0"
+                      type="submit" onClick={this.signOut}>Logout</button>;
 
     return (
       <nav className="navbar navbar-expand-md navbar-light bg-light">

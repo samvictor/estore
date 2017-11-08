@@ -67,7 +67,7 @@ class App extends Component {
             <Search search_term={this.state.search_term} items={this.state.items} />
           )} />
           <Route path="/login" render={() => (
-            <Login />
+            <Login user={this.state.user}/>
           )} />
           <Alerts />
         </div>
@@ -81,10 +81,14 @@ class App extends Component {
       this.setState({'items': items});
     });
 
-    firebase.auth().onAuthStateChanged(function(user) {
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         // User is signed in.
         this.state.db.child('users/'+user.uid).once('value', (snap) => {
+          if (snap.val() === null) {
+            this.setState({'user': user});
+            return;
+          }
           console.log('is admin is ', snap.val()['is_admin']);
           let for_state = {'user': user}
           if (snap.val()['is_admin'] === 'true')

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import {Redirect} from 'react-router-dom';
 import $ from 'jquery';
 /*global firebase*/
 
 class Login extends Component {
   login_keydown(e) {
     let code = e.which;
-    if(code==13)
+    if(code === 13)
       this.login_submit();
   }
   login_submit() {
@@ -13,21 +14,29 @@ class Login extends Component {
     let pass = document.querySelector('#login_password').value;
     document.querySelector('#login_email').value = '';
     document.querySelector('#login_password').value = '';
-    console.log('loging in with ', email, ' and ', pass);
 
-    firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(error) {
-      // Handle Errors here.
-      var error_code = error.code;
-      var error_message = error.message;
+    firebase.auth().signInWithEmailAndPassword(email, pass).then(
+      function () {
+        $('#alert_success').text('You are logged in')
+            .fadeIn().delay(4000).fadeOut();
+      }
+      ,function(error) {
+        // Handle Errors here.
+        var error_code = error.code;
+        var error_message = error.message;
 
-      $('#alert_danger').text(error_message);
-      $('#alert_danger').fadeIn().delay(10000).fadeOut();
-    });
+        $('#alert_danger').text(error_message)
+            .fadeIn().delay(10000).fadeOut();
+      });
   }
 
   render() {
+    let redir = null;
+    if (this.props.user !== null)
+      redir = <Redirect to="home" />;
     return (
       <div id="signup_login_div" className="row">
+        {redir}
         <div className="col-sm-6">
         <div id="login_div">
           <h3>Login</h3>
