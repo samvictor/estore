@@ -11,8 +11,22 @@ class Navbar extends Component {
         <Link to="about" className="nav-link" sref="about">About{(this.props.page==='about')?<span className="sr-only">(current)</span>:""}</Link>
       </li>
     ];
+
+    if(this.props.user_is_admin === 'true')
+      tabs += <li className={(this.props.page==='admin')?"nav-link active":"nav-link"}>
+        <Link to="admin" className="nav-link" sref="admin">Admin{(this.props.page==='Admin')?<span className="sr-only">(current)</span>:""}</Link>
+      </li>;
+
+    let login_btn;
+    if (this.props.user === null)
+      login_btn = <Link to="login">
+        <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Login / Signup</button>
+      </Link>;
+    else
+      login_btn = <button id="logout" className="btn btn-outline-danger my-2 my-sm-0" type="submit">Logout</button>;
+
     return (
-      <nav className="navbar navbar-expand-sm navbar-light bg-light">
+      <nav className="navbar navbar-expand-md navbar-light bg-light">
         <Link className="navbar-brand"
               to="home">ECommerce</Link>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +52,10 @@ class Navbar extends Component {
                     }}/>
 
             )} />
-            <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Cart</button>
+            <Link to="cart">
+              <button id="cart_btn" className="btn btn-outline-success my-2 my-sm-0" type="submit">Cart</button>
+            </Link>
+            {login_btn}
           </div>
         </div>
       </nav>

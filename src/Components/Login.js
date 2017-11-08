@@ -1,0 +1,52 @@
+import React, { Component } from 'react';
+import $ from 'jquery';
+/*global firebase*/
+
+class Login extends Component {
+  login_keydown(e) {
+    let code = e.which;
+    if(code==13)
+      this.login_submit();
+  }
+  login_submit() {
+    let email = document.querySelector('#login_email').value;
+    let pass = document.querySelector('#login_password').value;
+    document.querySelector('#login_email').value = '';
+    document.querySelector('#login_password').value = '';
+    console.log('loging in with ', email, ' and ', pass);
+
+    firebase.auth().signInWithEmailAndPassword(email, pass).catch(function(error) {
+      // Handle Errors here.
+      var error_code = error.code;
+      var error_message = error.message;
+
+      $('#alert_danger').text(error_message);
+      $('#alert_danger').fadeIn().delay(10000).fadeOut();
+    });
+  }
+
+  render() {
+    return (
+      <div id="signup_login_div" className="row">
+        <div className="col-sm-6">
+        <div id="login_div">
+          <h3>Login</h3>
+          <input id="login_email" placeholder="Email" className="form-control"/>
+          <input id="login_password" onKeyDown={this.login_keydown.bind(this)} placeholder="Password" type="password" className="form-control"/>
+          <button id="login_submit" onClick={this.login_submit} className="btn btn-outline-success">Submit</button>
+        </div>
+        </div>
+        <div className="col-sm-6">
+        <div id="signup_div">
+          <h3>Sign Up</h3>
+          <input id="signup_email" placeholder="Email" className="form-control"/>
+          <input id="signup_password" placeholder="Password" type="password" className="form-control"/>
+          <button id="signup_submit" onClick={this.signup_submit} className="btn btn-outline-success">Submit</button>
+        </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+export default Login;

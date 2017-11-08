@@ -10,6 +10,8 @@ import Navbar from './Components/Navbar'
 import Home from './Components/Home'
 import About from './Components/About'
 import Search from './Components/Search'
+import Login from './Components/Login'
+import Alerts from './Components/Alerts'
 /*global firebase*/
 
 
@@ -34,6 +36,8 @@ class App extends Component {
       'page': page,
       'db': database,
       'items': [],
+      'user': null,
+      'user_is_admin': 'false',
     }
   }
 
@@ -49,7 +53,9 @@ class App extends Component {
             let page = props.location.pathname.split('/')[1];
             page = (page === undefined || page === '')? 'home': page;
             return <Navbar page={page}
-                      search2={this.handleSearch.bind(this)}/>
+                      search2={this.handleSearch.bind(this)}
+                      user={this.state.user}
+                      user_is_admin={this.state.user_is_admin}/>
           }} />
           <Route path="/:path(home|)" render={() => (
             <Home items={this.state.items}/>
@@ -60,6 +66,10 @@ class App extends Component {
           <Route path="/search" render={() => (
             <Search search_term={this.state.search_term} items={this.state.items} />
           )} />
+          <Route path="/login" render={() => (
+            <Login />
+          )} />
+          <Alerts />
         </div>
       </Router>
     );
@@ -68,9 +78,25 @@ class App extends Component {
   componentDidMount() {
     this.state.db.child('items').on('value', (snap) => {
       let items = snap.val();
-      console.log(JSON.stringify(items));
       this.setState({'items': items});
     });
+
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        this.state.db.child('users/'+user.uid).once('value', (snap) => {
+          console.log('is admin is ', snap.val()['is_admin']);
+          let for_state = {'user': user}
+          if (snap.val()['is_admin'] === 'true')
+            for_state['user_is_admin'] = 'true';
+          this.setState(for_state);
+        });
+      } else {
+        // No user is signed in.
+        this.setState({'user': null});
+      }
+    });
+
   }
 }
 
