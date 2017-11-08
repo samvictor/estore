@@ -25,9 +25,9 @@ class Navbar extends Component {
     ];
 
     if(this.props.user_is_admin === 'true')
-      tabs += <li className={(this.props.page==='admin')?"nav-link active":"nav-link"}>
+      tabs.push( <li className={(this.props.page==='admin')?"nav-link active":"nav-link"}>
         <Link to="admin" className="nav-link" sref="admin">Admin{(this.props.page==='Admin')?<span className="sr-only">(current)</span>:""}</Link>
-      </li>;
+      </li>);
 
     let login_btn;
     if (this.props.user === null)

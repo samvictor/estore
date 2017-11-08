@@ -12,6 +12,7 @@ import About from './Components/About'
 import Search from './Components/Search'
 import Login from './Components/Login'
 import Alerts from './Components/Alerts'
+import Admin from './Components/Admin'
 /*global firebase*/
 
 
@@ -69,6 +70,9 @@ class App extends Component {
           <Route path="/login" render={() => (
             <Login user={this.state.user}/>
           )} />
+          <Route path="/admin" render={() => (
+            <Admin user={this.state.user} user_is_admin={this.state.user_is_admin}/>
+          )} />
           <Alerts />
         </div>
       </Router>
@@ -97,7 +101,7 @@ class App extends Component {
         });
       } else {
         // No user is signed in.
-        this.setState({'user': null});
+        this.setState({'user': null, 'user_is_admin': "false"});
       }
     });
 

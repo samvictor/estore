@@ -6,10 +6,14 @@ import $ from 'jquery';
 class Login extends Component {
   login_keydown(e) {
     let code = e.which;
-    if(code === 13)
+    if(code === 13) {
+      e.preventDefault();
       this.login_submit();
+    }
   }
-  login_submit() {
+  login_submit(e) {
+    if(e !== undefined) e.preventDefault();
+
     let email = document.querySelector('#login_email').value;
     let pass = document.querySelector('#login_password').value;
     document.querySelector('#login_email').value = '';
@@ -40,9 +44,12 @@ class Login extends Component {
         <div className="col-sm-6">
         <div id="login_div">
           <h3>Login</h3>
-          <input id="login_email" placeholder="Email" className="form-control"/>
-          <input id="login_password" onKeyDown={this.login_keydown.bind(this)} placeholder="Password" type="password" className="form-control"/>
-          <button id="login_submit" onClick={this.login_submit} className="btn btn-outline-success">Submit</button>
+          <form method="post" action="/form">
+            <input id="login_email" placeholder="Email" className="form-control" name="email"/>
+            <input id="login_password" onKeyDown={this.login_keydown.bind(this)}
+                  placeholder="Password" type="password" className="form-control" name="password"/>
+            <button id="login_submit" onClick={this.login_submit} className="btn btn-outline-success">Submit</button>
+          </form>
         </div>
         </div>
         <div className="col-sm-6">
