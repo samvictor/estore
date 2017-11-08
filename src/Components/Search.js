@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ShowItems from './ShowItems'
 import logo from '../logo.svg';
 
 class Search extends Component {
@@ -13,6 +14,7 @@ class Search extends Component {
           Search page<br/>
           Searching for {this.props.search_term}
         </p>
+        <ShowItems items={this.props.items}/>
       </div>
     );
   }

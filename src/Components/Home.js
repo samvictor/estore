@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ShowItems from './ShowItems'
 import logo from '../logo.svg';
 
 class Home extends Component {
@@ -12,6 +13,7 @@ class Home extends Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
+        <ShowItems items={this.props.items}/>
       </div>
     );
   }

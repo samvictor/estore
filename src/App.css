@@ -27,6 +27,7 @@
   to { transform: rotate(360deg); }
 }
 
+/* NAVBAR */
 button, a {
   cursor: pointer;
 }
@@ -37,4 +38,42 @@ button, a {
 
 .nav-link {
   transition: all 0.4s;
+}
+
+/* SHOW ITEMS */
+#show_items {
+  padding: 5px 15px;
+}
+.item_cont {
+  min-height: 360px;
+}
+.item {
+  text-align: center;
+  padding: 5px 5px 10px 5px;
+  margin-bottom: 20px;
+  border: solid 1px #444;
+  border-radius: 2.5px;
+  height: calc(100% - 20px);
+}
+.item_img_div {
+  height: 250px;
+  background-color: #eee;
+  margin-bottom: 10px;
+}
+.item_img {
+  max-width: 100%;
+  max-height: 100%;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.item_price {
+  text-align: center;
+  display: inline-block;
+  margin-right: 25px;
+}
+
+.item_cart {
+  text-align: center;
+  display: inline-block;
 }

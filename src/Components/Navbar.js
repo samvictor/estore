@@ -2,25 +2,6 @@ import React, { Component } from 'react';
 import {Route, Link} from 'react-router-dom';
 
 class Navbar extends Component {
-
-  handleClick(page) {
-    switch (page) {
-      case 'home':
-        this.props.goto_page({'page': page, 'name': 'Home'});
-      break;
-      case 'about':
-        this.props.goto_page({'page': page, 'name': 'About'});
-      break;
-      case 'search':
-        console.log('searching');
-        //this.props.history.push('/search');
-        //this.props.goto_page({'page': page, 'name': 'Search'});
-      break;
-      default:
-        this.props.goto_page({'page': 'home', 'name': 'Home'});
-    }
-  }
-
   render() {
     let tabs = [
       <li className={(this.props.page==='home')?"nav-link active":"nav-link"}>
