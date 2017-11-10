@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {Redirect} from 'react-router-dom';
-import $ from 'jquery';
 /*global firebase*/
 
 class Login extends Component {
@@ -62,6 +61,10 @@ class Login extends Component {
         </div>
       </div>
     );
+  }
+
+  componentDidMount() {
+    document.title = "eCommerce - Login";
   }
 }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Route, Link} from 'react-router-dom';
-import $ from 'jquery';
 /*global firebase*/
+/*global $*/
 
 class Navbar extends Component {
   signOut() {
@@ -12,8 +12,16 @@ class Navbar extends Component {
     }).catch(function(error) {
       console.log('signout failed', error);
     });
-
   }
+
+  search_keyup(e) {
+    let code = e.which;
+    if(code === 13) {
+      e.preventDefault();
+      $('#navbarSupportedContent').collapse('hide');
+    }
+  }
+
   render() {
     let tabs = [
       <li className={(this.props.page==='home')?"nav-link active":"nav-link"}>
@@ -39,7 +47,7 @@ class Navbar extends Component {
                       type="submit" onClick={this.signOut}>Logout</button>;
 
     return (
-      <nav className="navbar navbar-expand-md navbar-light bg-light">
+      <nav id="main_navbar" className="navbar navbar-expand-md collapse navbar-light bg-light">
         <Link className="navbar-brand"
               to="home">ECommerce</Link>
         <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -62,7 +70,9 @@ class Navbar extends Component {
                             history.push('/search');
 
                           this.props.search2(search_term);
-                    }}/>
+
+                    }}
+                    onKeyUp={this.search_keyup}/>
 
             )} />
             <Link to="cart">

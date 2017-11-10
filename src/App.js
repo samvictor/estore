@@ -38,7 +38,7 @@ class App extends Component {
       'db': database,
       'items': [],
       'user': null,
-      'user_is_admin': 'false',
+      'user_is_admin': null,
     }
   }
 
@@ -47,6 +47,8 @@ class App extends Component {
   }
 
   render() {
+    document.title = "eCommerce";
+
     return (
       <Router>
         <div className="App">
@@ -71,7 +73,8 @@ class App extends Component {
             <Login user={this.state.user}/>
           )} />
           <Route path="/admin" render={() => (
-            <Admin user={this.state.user} user_is_admin={this.state.user_is_admin}/>
+            <Admin user={this.state.user} user_is_admin={this.state.user_is_admin}
+                  items={this.state.items}/>
           )} />
           <Alerts />
         </div>
@@ -82,7 +85,11 @@ class App extends Component {
   componentDidMount() {
     this.state.db.child('items').on('value', (snap) => {
       let items = snap.val();
-      this.setState({'items': items});
+      let items_list = [];
+      for (var key in items) {
+        items_list.push(items[key]);
+      }
+      this.setState({'items': items_list});
     });
 
     firebase.auth().onAuthStateChanged((user) => {
@@ -93,7 +100,6 @@ class App extends Component {
             this.setState({'user': user});
             return;
           }
-          console.log('is admin is ', snap.val()['is_admin']);
           let for_state = {'user': user}
           if (snap.val()['is_admin'] === 'true')
             for_state['user_is_admin'] = 'true';

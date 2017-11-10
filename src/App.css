@@ -27,13 +27,22 @@
   to { transform: rotate(360deg); }
 }
 
+.alert {
+  display: none;
+  position: fixed;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+}
+
 /* NAVBAR */
 button, a {
   cursor: pointer;
 }
 
 #search {
-  width: calc(100% - 190px);
+  width: calc(100% - 200px);
   margin-right: 0px !important;
 }
 
@@ -56,14 +65,14 @@ button, a {
 }
 .item {
   text-align: center;
-  padding: 8px 8px 15px 8px;
+  padding: 8px 8px 65px 8px;
   margin-bottom: 20px;
   border: solid 1px #444;
   border-radius: 2.5px;
   height: calc(100% - 20px);
 }
 .item_img_div {
-  height: 200px;
+  height: 280px;
   background-color: rgba(240, 240, 240, 30);
   margin-bottom: 10px;
 }
@@ -85,6 +94,10 @@ button, a {
 .item_price {
   margin-top: 10px;
   padding: 2px 8px;
+  position: absolute;
+  bottom: 35px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 .item_price > t {
   margin: 7px 0px 5px 7px;
@@ -115,12 +128,40 @@ button, a {
   width: 100%;
 }
 
-
-.alert {
-  display: none;
-  position: fixed;
-  top: 50px;
-  left: 50%;
-  transform: translateX(-50%);
+/* admin */
+#admin_div {
+  padding-top: 20px;
+}
+#admin_div h1, #admin_div h4 {
+  font-family: 'Raleway', sans-serif;
+}
+#new_item {
+  border: solid 1px #444;
+  border-radius: 3.5px;
+  margin: 10px 10%;
+  padding: 20px 5%;
+}
+#new_item > input, #new_item > textarea {
+  margin-bottom: 8px;
+}
+#new_item_enter {
+  width: 100%;
+}
+#admin_items {
+  padding: 10px;
+}
+#admin_items .item {
+  padding-bottom: 15px;
+}
+.edit_item_name, .edit_item_desc, .edit_item_price, .item_enter {
+  margin: 5px auto 12px auto;
   width: 80%;
+}
+.edit_item_desc {
+  min-height: 120px;
+}
+
+#admin_items h3 {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.5em;
 }
