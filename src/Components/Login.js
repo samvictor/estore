@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Redirect} from 'react-router-dom';
 /*global firebase*/
+/*global $*/
 
 class Login extends Component {
   login_keydown(e) {
