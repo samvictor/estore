@@ -7,13 +7,15 @@ import ImageUploader from 'react-images-upload';
 class Admin extends Component {
   constructor(props) {
     super(props);
-    this.state = { pictures: [] };
-    this.onDrop = this.onDrop.bind(this);
+    this.state = { pictures: {} };
   }
-  onDrop(picture) {
-    this.setState({
-      pictures: this.state.pictures.concat(picture),
-    });
+  onDrop(item_id, new_pic) {
+    console.log('old state is ', JSON.stringify(this.state));
+    let pictures = this.state.pictures;
+    pictures[item_id] = new_pic;
+    this.setState({'pictures': pictures}, () =>
+                console.log(JSON.stringify(this.state), ' for ', item_id));
+    $('#new_item .uploadPicturesWrapper > div').html('');
   }
 
   render() {
@@ -39,8 +41,7 @@ class Admin extends Component {
                   defaultValue={this_item.name} item_id={this_item.id}/>
           <h3>Item Description</h3>
           <textarea id={this_item.id+'_desc'} className="edit_item_desc form-control"
-                  item_id={this_item.id}>
-              {this_item.description}</textarea>
+                  item_id={this_item.id} defaultValue={this_item.description}></textarea>
           <h3>Item Price</h3>
           <input id={this_item.id+'_price'} className="edit_item_price form-control"
                   defaultValue={this_item.price} item_id={this_item.id}
@@ -66,9 +67,11 @@ class Admin extends Component {
                   type="number" step="0.01"/>
           <ImageUploader
                   withIcon={true}
-                  buttonText='Choose images'
-                  onChange={this.onDrop}
-                  imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                  buttonText='Choose Image'
+                  onChange={this.onDrop.bind(this, 'new_item')}
+                  buttonClassName={'image_btn_new_item'}
+                  imgExtension={['.jpg', '.png', '.gif']}
+                  label='Max file size: 5mb. Accepted: .jpg, .png, .gif'
                   maxFileSize={5242880}
             />
           <button id="new_item_enter" className="btn btn-outline-success">Enter</button>
@@ -82,6 +85,12 @@ class Admin extends Component {
 
   componentDidMount() {
     document.title = "eCommerce - Admin";
+    $('#new_item .chooseFileButton')
+      .after('<button class="remove_img btn btn-danger" item_id="new_item">Remove Image</button>');
+
+    $('.remove_img').on('click', function(){
+      console.log($(this).attr('item_id'));
+    });
   }
 }
 

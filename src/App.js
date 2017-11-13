@@ -1,3 +1,4 @@
+//TODO: sorting by time, order and remove margin from .row class in admin
 /*
   Written by Sam Inniss for Connie
   SamInniss.com
@@ -89,6 +90,16 @@ class App extends Component {
       for (var key in items) {
         items_list.push(items[key]);
       }
+      // sort decending by time
+      items_list.sort(function(b, a){
+        if (a.time < b.time )
+          return -1
+
+        if (a.time > b.time)
+          return 1
+
+        return 0
+      });
       this.setState({'items': items_list});
     });
 

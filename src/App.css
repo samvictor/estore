@@ -149,6 +149,7 @@ button, a {
 }
 #admin_items {
   padding: 10px;
+  margin: 0px;
 }
 #admin_items .item {
   padding-bottom: 15px;
@@ -160,8 +161,22 @@ button, a {
 .edit_item_desc {
   min-height: 120px;
 }
-
 #admin_items h3 {
   font-family: 'Raleway', sans-serif;
   font-size: 1.5em;
+}
+button.remove_img {
+  border-radius: 30px;
+  padding: 5px 20px;
+  display: inline-block;
+  position: relative;
+  left: 82px;
+  top: -4px;
+}
+button.chooseFileButton {
+  transform: translateX(-55%);
+  margin-bottom: -30px !important;
+}
+.deleteImage {
+  display: none;
 }
