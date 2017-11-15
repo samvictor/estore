@@ -1,4 +1,8 @@
-//TODO: sorting by time, order and remove margin from .row class in admin
+//TODO: sorting by order and add image and remove causes error
+//TODO: rewrite image uploader
+//TODO: add items to cart
+//TODO: delete items
+
 /*
   Written by Sam Inniss for Connie
   SamInniss.com
@@ -40,6 +44,7 @@ class App extends Component {
       'page': page,
       'db': database,
       'storage': storage,
+      'stable_items': [], // stable items don't change when db changes
       'items': [],
       'user': null,
       'user_is_admin': null,
@@ -78,7 +83,7 @@ class App extends Component {
           )} />
           <Route path="/admin" render={() => (
             <Admin user={this.state.user} user_is_admin={this.state.user_is_admin}
-                  items={this.state.items} storage={this.state.storage}
+                  items={this.state.stable_items} storage={this.state.storage}
                   db={this.state.db}/>
           )} />
           <Alerts />
@@ -106,6 +111,24 @@ class App extends Component {
       });
       this.setState({'items': items_list});
     });
+    this.state.db.child('items').once('value', (snap) => {
+        let items = snap.val();
+        let items_list = [];
+        for (var key in items) {
+          items_list.push(items[key]);
+        }
+        // sort decending by time
+        items_list.sort(function(b, a){
+          if (a.time < b.time )
+            return -1
+
+          if (a.time > b.time)
+            return 1
+
+          return 0
+        });
+        this.setState({'stable_items': items_list});
+      });
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {

@@ -11,12 +11,12 @@ class ShowItems extends Component {
       short_description = this_item.description;
       if(short_description.length > 40)
         short_description = short_description.substring(0, 40) + '...';
-
+      let item_url = (this_item.imgs === undefined)? '': this_item.imgs[0].url;
       for_ret.push(
         <div id={'item_'+this_item.id} className="item_cont col-xl-3 col-lg-4 col-md-4 col-sm-6">
         <div className="item">
           <div className="item_img_div">
-            <img className="item_img" src={this_item.imgs[0].url} alt={this_item.name}/>
+            <img className="item_img" src={item_url} alt={this_item.name}/>
           </div>
           <h5 className="item_name">{this_item.name.toUpperCase()}</h5>
           <em className="item_desc" title={this_item.description}>{short_description}</em><br/>

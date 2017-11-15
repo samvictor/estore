@@ -9,23 +9,14 @@ import ImageUploader from 'react-images-upload';
 class Admin extends Component {
   constructor(props) {
     super(props);
-
-    let items = this.props.items;
-    let this_item = {};
-    let item_ids = [];
-    for(var i = 0; i < items.length; i++) {
-      this_item = items[i];
-      item_ids.push(this_item.id);
-    }
-
-    this.state = { 'pictures': {},
-                   'item_ids': item_ids};
+    this.state = { 'pictures': {}};
   }
   onDrop(item_id, new_pic) {
     console.log('old state is ', JSON.stringify(this.state));
     let pictures = this.state.pictures;
     pictures[item_id] = new_pic;
-    this.setState({'pictures': pictures});
+    this.setState({'pictures': pictures}, () =>
+      console.log('new state is ', JSON.stringify(this.state)));
     $('#new_item .uploadPicturesWrapper > div').html('');
   }
 
@@ -39,12 +30,50 @@ class Admin extends Component {
     if (target === 'new_item'){
       // item id cannot contain underscore
       temp_item_id = document.querySelector('#new_item_name').value
-                  .replace(/\.|\/|\_|\s|\$|\[|\]|\#/g, '')
+                  .replace(/\.|\/|\_|\s|\$|\[|\]|\#|\!/g, '')
                   .toLowerCase();
+
+      if (temp_item_id === '') {
+        $('#alert_danger').text('Item name cannot be blank').fadeIn()
+                  .delay(7000).fadeOut();
+        $('#alert_info').fadeOut();
+        return;
+      }
+      if (document.querySelector('#new_item_price').value === '') {
+        $('#alert_danger').text('Price is invalid').fadeIn()
+                  .delay(7000).fadeOut();
+        $('#alert_info').fadeOut();
+        return;
+      }
+
+      let items = this.props.items;
+      let this_item = {};
+      let item_ids = [];
+      for(var i = 0; i < items.length; i++) {
+        this_item = items[i];
+        item_ids.push(this_item.id);
+      }
+      console.log(items);
+
       id_counter = 0;
       item_id = temp_item_id;
-      while(this.state.item_ids.includes(item_id)) {
+      while(item_ids.includes(item_id)) {
         item_id = temp_item_id + (++id_counter);
+      }
+    }
+    else {
+      // not new item
+      if (document.querySelector('#'+target+'_name').value === '') {
+        $('#alert_danger').text('Item name cannot be blank').fadeIn()
+                  .delay(7000).fadeOut();
+        $('#alert_info').fadeOut();
+        return;
+      }
+      if (document.querySelector('#'+target+'_price').value === '') {
+        $('#alert_danger').text('Price is invalid').fadeIn()
+                  .delay(7000).fadeOut();
+        $('#alert_info').fadeOut();
+        return;
       }
     }
     console.log('item_id is ', item_id);
@@ -57,7 +86,7 @@ class Admin extends Component {
       for_db[item_id+'/id'] = item_id;
       if (img_url !== undefined) {
         for_db[item_id+'/full_img'] = img_url;
-        for_db[item_id+'/imgs'] = [img_url];
+        for_db[item_id+'/imgs'] = [{'url': img_url}];
       }
 
       if(target === 'new_item') {
@@ -75,11 +104,13 @@ class Admin extends Component {
 
       console.log('for db ', JSON.stringify(for_db));
 
-      this.props.db.child('items').update(for_db).then(
+      firebase.database().ref('estore/items').update(for_db).then(
         function(){
           console.log('update succeded');
           $('#alert_info').fadeOut();
-          $('#alert_success').text('Done').fadeIn().delay(3000).fadeOut();
+          $('#alert_success').text(
+            (target === 'new_item')?'Item Created': 'Item Updated'
+          ).fadeIn().delay(3000).fadeOut();
         },
         function(error){
           console.log('update failed: ', error.message);
@@ -95,11 +126,13 @@ class Admin extends Component {
       save_data.bind(this)();
       return;
     }
-    console.log('saving image');
+    image = image[0];
+    console.log('saving image ', image);
     // image was found, upload image
     let upload_task = storage.child(item_id+'/' + image.name).put(image); // , metadata);
     upload_task.on(firebase.storage.TaskEvent.STATE_CHANGED,
       function(snapshot) {
+        console.log('getting progress');
         // after upload, we are 80% done
         let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 80;
         console.log('Upload is ' + progress + '% done');
@@ -116,9 +149,11 @@ class Admin extends Component {
         $('#alert_info').fadeOut();
         $('#alert_danger').text('Error: '+error.message).fadeIn()
             .delay(10000).fadeOut();
+        console.log(error.message);
     }, function() {
       // Upload completed successfully, now we can get the download URL
       let img_url = upload_task.snapshot.downloadURL;
+      console.log('upload done ', img_url);
       save_data.bind(this, img_url)();
     });
   }
@@ -202,7 +237,7 @@ class Admin extends Component {
 
     $('.remove_img').on('click', () => {
       console.log($(this).attr('item_id'));
-      $('#new_item .uploadPicturesWrapper > div').html('');
+      $('#new_item .uploadPictureContainer').html('');
       let pictures = this.state.pictures;
       pictures['new_item'] = null;
       this.setState({'pictures': pictures});
