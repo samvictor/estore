@@ -26,10 +26,12 @@ class App extends Component {
       authDomain: "estore-7e485.firebaseapp.com",
       databaseURL: "https://estore-7e485.firebaseio.com",
       projectId: "estore-7e485",
-      storageBucket: "",
+      storageBucket: "estore-7e485.appspot.com",
     };
     firebase.initializeApp(config);
     let database = firebase.database().ref('estore');
+    let storage = firebase.storage().ref('estore');
+
     let page = window.location.pathname.split('/')[1];
     page = (page === undefined || page === '')? 'home': page;
     this.state = {
@@ -37,6 +39,7 @@ class App extends Component {
       'site_name': 'eCommerce',
       'page': page,
       'db': database,
+      'storage': storage,
       'items': [],
       'user': null,
       'user_is_admin': null,
@@ -75,7 +78,8 @@ class App extends Component {
           )} />
           <Route path="/admin" render={() => (
             <Admin user={this.state.user} user_is_admin={this.state.user_is_admin}
-                  items={this.state.items}/>
+                  items={this.state.items} storage={this.state.storage}
+                  db={this.state.db}/>
           )} />
           <Alerts />
         </div>
