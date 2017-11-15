@@ -120,12 +120,37 @@ button, a {
   margin: 5px 5% 5px 5%;
   padding: 20px 5% 20px 5%;
 }
-#signup_email, #login_email, #signup_password, #login_password {
+#signup_email, #login_email, #signup_password, #login_password,
+#signup_email_dup, #signup_password_dup {
   margin-bottom: 10px;
   text-align: center;
 }
-#signup_submit, #login_submit {
+#signup_submit, #login_submit, #forgot_submit {
   width: 100%;
+}
+#login_submit {
+  margin-bottom: 10px;
+}
+#forgot_div {
+  border: solid 1px #444;
+  border-radius: 3.5px;
+  margin: 5px 2.5% 5px 2.5%;
+  padding: 20px 5% 20px 5%;
+}
+#forgot_email {
+  margin-bottom: 10px;
+  text-align: center;
+}
+@media (max-width: 576px) {
+  #forgot_div {
+    margin: 5px 5% 5px 5%;
+  }
+}
+.requirements {
+  color: #444;
+}
+#login_divider{
+  margin: 24px 20px;
 }
 
 /* admin */

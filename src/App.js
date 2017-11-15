@@ -3,7 +3,11 @@
 //TODO: add items to cart
 //TODO: signup
 //TODO: delete items
-
+//TODO: force logout
+/* updating site name:
+index.html head title
+email template sender and project name
+render document.title */
 /*
   Written by Sam Inniss for Connie
   SamInniss.com
