@@ -9,7 +9,27 @@ import ImageUploader from 'react-images-upload';
 class Admin extends Component {
   constructor(props) {
     super(props);
-    this.state = { 'pictures': {}};
+    this.state = { 'pictures': {}, 'items': []};
+  }
+  componentWillMount() {
+    firebase.database().ref('estore/items').once('value', (snap) => {
+        let items = snap.val();
+        let items_list = [];
+        for (var key in items) {
+          items_list.push(items[key]);
+        }
+        // sort decending by time
+        items_list.sort(function(b, a){
+          if (a.time < b.time )
+            return -1
+
+          if (a.time > b.time)
+            return 1
+
+          return 0
+        });
+        this.setState({'items': items_list});
+      });
   }
   onDrop(item_id, new_pic) {
     console.log('old state is ', JSON.stringify(this.state));
@@ -46,7 +66,7 @@ class Admin extends Component {
         return;
       }
 
-      let items = this.props.items;
+      let items = this.state.items;
       let this_item = {};
       let item_ids = [];
       for(var i = 0; i < items.length; i++) {
@@ -108,9 +128,12 @@ class Admin extends Component {
         function(){
           console.log('update succeded');
           $('#alert_info').fadeOut();
-          $('#alert_success').text(
-            (target === 'new_item')?'Item Created': 'Item Updated'
-          ).fadeIn().delay(3000).fadeOut();
+          if (target === 'new_item')
+            $('#alert_success').text('Item created. Reload to see new item.').fadeIn()
+                .delay(10000).fadeOut();
+          else
+            $('#alert_success').text('Item updated. Reload to see update.').fadeIn()
+                .delay(10000).fadeOut();
         },
         function(error){
           console.log('update failed: ', error.message);
@@ -160,7 +183,7 @@ class Admin extends Component {
 
   render() {
     let this_item = {};
-    let items = this.props.items;
+    let items = this.state.items;
     let for_ret = [];
     let short_description;
     for(var i = 0; i < items.length; i++) {
@@ -187,6 +210,15 @@ class Admin extends Component {
           <input id={this_item.id+'_price'} className="edit_item_price form-control"
                   defaultValue={this_item.price} item_id={this_item.id}
                   type="number" step="0.01"/>
+          <ImageUploader
+                  withIcon={true}
+                  buttonText='Choose Image'
+                  onChange={this.onDrop.bind(this, this_item.id)}
+                  buttonClassName={'image_btn_new_item'}
+                  imgExtension={['.jpg', '.png', '.gif']}
+                  label=''
+                  maxFileSize={5242880}
+            />
           <button id={this_item.id+'_enter'}
                   className="item_enter btn btn-outline-success"
                   item_id={this_item.id}
@@ -231,7 +263,7 @@ class Admin extends Component {
 
   componentDidMount() {
     document.title = "eCommerce - Admin";
-    $('#new_item .chooseFileButton')
+    /*$('#new_item .chooseFileButton')
       .after('<button class="remove_img btn btn-danger"'
           +' item_id="new_item">Remove Image</button>');
 
@@ -241,7 +273,7 @@ class Admin extends Component {
       let pictures = this.state.pictures;
       pictures['new_item'] = null;
       this.setState({'pictures': pictures});
-    });
+    });*/
   }
 }
 

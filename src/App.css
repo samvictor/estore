@@ -161,6 +161,18 @@ button, a {
 .edit_item_desc {
   min-height: 120px;
 }
+.item_enter {
+  position: absolute;
+  bottom: 33px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#admin_items .fileUploader {
+  margin-bottom: 55px;
+}
+.fileContainer{
+  border: solid 1px #d8d8d8;
+}
 #admin_items h3 {
   font-family: 'Raleway', sans-serif;
   font-size: 1.5em;
@@ -174,8 +186,8 @@ button.remove_img {
   top: -4px;
 }
 button.chooseFileButton {
-  transform: translateX(-55%);
-  margin-bottom: -30px !important;
+  /*transform: translateX(-55%);
+  margin-bottom: -30px !important;*/
 }
 .deleteImage {
   display: none;

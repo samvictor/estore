@@ -1,6 +1,7 @@
 //TODO: sorting by order and add image and remove causes error
 //TODO: rewrite image uploader
 //TODO: add items to cart
+//TODO: signup
 //TODO: delete items
 
 /*
@@ -92,7 +93,7 @@ class App extends Component {
     );
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.state.db.child('items').on('value', (snap) => {
       let items = snap.val();
       let items_list = [];
