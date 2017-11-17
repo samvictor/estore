@@ -134,9 +134,9 @@ class Login extends Component {
         <div id="signup_div">
           <h3>Sign Up</h3>
           <input id="signup_email" placeholder="Email" className="form-control"/>
-          <input id="signup_email_dup" placeholder="Verify Email" className="form-control"/>
+          <input id="signup_email_dup" placeholder="Confirm Email" className="form-control"/>
           <input id="signup_password" placeholder="Password" type="password" className="form-control"/>
-          <input id="signup_password_dup" placeholder="Verify Password" type="password" className="form-control"/>
+          <input id="signup_password_dup" placeholder="Confirm Password" type="password" className="form-control"/>
           <p className="requirements">
             Password Should Contain:<br/>
               * at least 6 characters<br/>

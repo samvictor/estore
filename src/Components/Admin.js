@@ -50,7 +50,7 @@ class Admin extends Component {
     if (target === 'new_item'){
       // item id cannot contain underscore
       temp_item_id = document.querySelector('#new_item_name').value
-                  .replace(/\.|\/|\_|\s|\$|\[|\]|\#|\!/g, '')
+                  .replace(/\.|\/|_|\s|\$|\[|\]|#|!/g, '')
                   .toLowerCase();
 
       if (temp_item_id === '') {
@@ -152,12 +152,14 @@ class Admin extends Component {
     image = image[0];
     console.log('saving image ', image);
     // image was found, upload image
-    let upload_task = storage.child(item_id+'/' + image.name).put(image); // , metadata);
+    let upload_task = storage.child(item_id+'/' + image.name).put(image);
+    // , metadata);
     upload_task.on(firebase.storage.TaskEvent.STATE_CHANGED,
       function(snapshot) {
         console.log('getting progress');
         // after upload, we are 80% done
-        let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 80;
+        let progress = Math.floor((snapshot.bytesTransferred / snapshot.totalBytes)
+                  * 80);
         console.log('Upload is ' + progress + '% done');
         $('#alert_info').text('Working ('+progress+'%)...');
         switch (snapshot.state) {
@@ -167,6 +169,7 @@ class Admin extends Component {
           case firebase.storage.TaskState.RUNNING: // or 'running'
             console.log('Upload is running');
           break;
+          default:
         }
       }, function(error) {
         $('#alert_info').fadeOut();
@@ -186,6 +189,11 @@ class Admin extends Component {
     let items = this.state.items;
     let for_ret = [];
     let short_description;
+
+    if(items.length === 0){
+      for_ret = [<h3 className="loading_items">Loading...</h3>];
+    }
+
     for(var i = 0; i < items.length; i++) {
       this_item = items[i];
       short_description = this_item.description;

@@ -13,7 +13,11 @@ class Home extends Component {
         <p className="App-intro">
           Browse our collection below.
         </p>
-        <ShowItems items={this.props.items}/>
+        <ShowItems items={this.props.items}
+                   user={this.props.user}
+                   db={this.props.db}
+                   user_cart={this.props.user_cart}
+                   page="home"/>
       </div>
     );
   }

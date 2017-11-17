@@ -14,7 +14,8 @@ class Search extends Component {
           Search page<br/>
           Searching for {this.props.search_term}
         </p>
-        <ShowItems items={this.props.items}/>
+        <ShowItems items={this.props.items}
+                   page="search"/>
       </div>
     );
   }

@@ -23,6 +23,7 @@ import Search from './Components/Search'
 import Login from './Components/Login'
 import Alerts from './Components/Alerts'
 import Admin from './Components/Admin'
+import Cart from './Components/Cart'
 /*global firebase*/
 
 
@@ -49,10 +50,11 @@ class App extends Component {
       'page': page,
       'db': database,
       'storage': storage,
-      'stable_items': [], // stable items don't change when db changes
       'items': [],
+      'items_dict': {},
       'user': null,
       'user_is_admin': null,
+      'user_cart': [],
     }
   }
 
@@ -75,21 +77,34 @@ class App extends Component {
                       user_is_admin={this.state.user_is_admin}/>
           }} />
           <Route path="/:path(home|)" render={() => (
-            <Home items={this.state.items}/>
+            <Home items={this.state.items}
+                  user={this.state.user}
+                  db={this.state.db}
+                  user_cart={this.state.user_cart}/>
           )} />
           <Route path="/about" render={() => (
             <About />
           )} />
           <Route path="/search" render={() => (
-            <Search search_term={this.state.search_term} items={this.state.items} />
+            <Search search_term={this.state.search_term}
+                    items={this.state.items}
+                    user={this.state.user}
+                    db={this.state.db}/>
           )} />
           <Route path="/login" render={() => (
             <Login user={this.state.user}/>
           )} />
           <Route path="/admin" render={() => (
             <Admin user={this.state.user} user_is_admin={this.state.user_is_admin}
-                  items={this.state.stable_items} storage={this.state.storage}
+                  storage={this.state.storage}
                   db={this.state.db}/>
+          )} />
+          <Route path="/cart" render={() => (
+            <Cart  user={this.state.user}
+                    items={this.state.items}
+                    items_dict={this.state.items_dict}
+                    db={this.state.db}
+                    user_cart={this.state.user_cart}/>
           )} />
           <Alerts />
         </div>
@@ -114,43 +129,39 @@ class App extends Component {
 
         return 0
       });
-      this.setState({'items': items_list});
+      this.setState({'items': items_list, 'items_dict': items});
     });
-    this.state.db.child('items').once('value', (snap) => {
-        let items = snap.val();
-        let items_list = [];
-        for (var key in items) {
-          items_list.push(items[key]);
-        }
-        // sort decending by time
-        items_list.sort(function(b, a){
-          if (a.time < b.time )
-            return -1
-
-          if (a.time > b.time)
-            return 1
-
-          return 0
-        });
-        this.setState({'stable_items': items_list});
-      });
 
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         // User is signed in.
-        this.state.db.child('users/'+user.uid).once('value', (snap) => {
+        this.state.db.child('users/'+user.uid).on('value', (snap) => {
           if (snap.val() === null) {
             this.setState({'user': user});
             return;
           }
-          let for_state = {'user': user}
-          if (snap.val()['is_admin'] === 'true')
+          let user_data = snap.val();
+          let for_state = {'user': user};
+          if (user_data['is_admin'] === 'true')
             for_state['user_is_admin'] = 'true';
+
+
+          let temp_cart = [];
+          if (user_data['cart'] === undefined)
+            for_state['user_cart'] = [];
+          else {
+            for(var key in user_data['cart']){
+              temp_cart.push(user_data['cart'][key]['item_id']);
+            }
+            for_state['user_cart'] = temp_cart;
+          }
+
           this.setState(for_state);
         });
       } else {
         // No user is signed in.
-        this.setState({'user': null, 'user_is_admin': "false"});
+        this.setState({'user': null, 'user_is_admin': 'false',
+                'user_cart': []});
       }
     });
 
