@@ -78,8 +78,6 @@ class Login extends Component {
             .fadeIn().delay(4000).fadeOut();
       }
       ,function(error) {
-        // Handle Errors here.
-        var error_code = error.code;
         var error_message = error.message;
 
         $('#alert_danger').text(error_message)

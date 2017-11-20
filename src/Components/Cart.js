@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import ShowItems from './ShowItems'
 import logo from '../logo.svg';
+/*global braintree*/
 
 class Cart extends Component {
   render() {
@@ -52,15 +52,56 @@ class Cart extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to our Store</h1>
         </header>
-        <h3>Cart</h3>
+        <h3 id="cart_title">Cart</h3>
         <p className="App-intro">
-          Total Price ${price} <button className="btn btn-outline-success">Checkout</button>
+          Total Price ${price.toFixed(2)}
+          <button id="checkout_btn" className="btn btn-outline-success"
+                  onClick={function(){
+                    document.querySelector('#checkout_div')
+                            .scrollIntoView({'behavior': 'smooth'});
+                  }}>Checkout</button>
         </p>
         <div id="show_items" className="row">
           {for_ret}
         </div>
+        <hr id="checkout_hr"/>
+        <div id="checkout_div">
+          <h3>Checkout</h3>
+          <div id="dropin-container"></div>
+          <button id="submit-button">Request payment method</button>
+          <script>
+          </script>
+        </div>
       </div>
     );
+  }
+
+  componentDidMount(){
+    /*var button = document.querySelector('#submit-button');
+
+    braintree.dropin.create({
+      'authorization': 'CLIENT_TOKEN_FROM_SERVER',
+      'container': '#dropin-container'
+    }, function (err, instance) {
+      console.log(err);
+    });*/
+    var submitButton = document.querySelector('#submit-button');
+
+      braintree.dropin.create({
+        authorization: 'CLIENT_AUTHORIZATION',
+        container: '#dropin-container'
+      }).then(function (dropinInstance) {
+        submitButton.addEventListener('click', function () {
+          dropinInstance.requestPaymentMethod().then(function (payload) {
+            // Send payload.nonce to your server
+          }).catch(function (err) {
+            // Handle errors in requesting payment method
+          });
+        });
+      }).catch(function (err) {
+        // Handle any errors that might've occurred when creating Drop-in
+        console.error(err);
+      });
   }
 }
 

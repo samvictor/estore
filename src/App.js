@@ -1,13 +1,18 @@
 //TODO: sorting by order and add image and remove causes error
 //TODO: rewrite image uploader
-//TODO: add items to cart
-//TODO: signup
-//TODO: delete items
-//TODO: force logout
+//TODO: admin delete items
+//TODO: admin force user logout
+//TODO: on cart, cart nav btn Should light up
+//TODO: cart for "email"
+//TODO: cart remove items
+//TODO: Nothing in cart "nothing here"
+//TODO: past orders for users and admin
 /* updating site name:
 index.html head title
 email template sender and project name
-render document.title */
+render document.title
+change index.html theme color
+manifest.json name and theme color */
 /*
   Written by Sam Inniss for Connie
   SamInniss.com
@@ -89,7 +94,8 @@ class App extends Component {
             <Search search_term={this.state.search_term}
                     items={this.state.items}
                     user={this.state.user}
-                    db={this.state.db}/>
+                    db={this.state.db}
+                    user_cart={this.state.user_cart}/>
           )} />
           <Route path="/login" render={() => (
             <Login user={this.state.user}/>

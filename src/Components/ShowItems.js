@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-/*global firebase*/
 /*global $*/
 
 class ShowItems extends Component {
