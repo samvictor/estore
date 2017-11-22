@@ -7,6 +7,8 @@
 //TODO: cart remove items
 //TODO: Nothing in cart "nothing here"
 //TODO: past orders for users and admin
+//TODO: if user not logged in, don't show cart btn
+//TODO: in future, add temp cart
 /* updating site name:
 index.html head title
 email template sender and project name

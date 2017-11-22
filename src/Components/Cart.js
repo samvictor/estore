@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from '../logo.svg';
 /*global braintree*/
+/*global $*/
 
 class Cart extends Component {
   render() {
@@ -52,7 +53,7 @@ class Cart extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to our Store</h1>
         </header>
-        <h3 id="cart_title">Cart</h3>
+        <h3 id="cart_title">Cart for {props.user.email}</h3>
         <p className="App-intro">
           Total Price ${price.toFixed(2)}
           <button id="checkout_btn" className="btn btn-outline-success"
@@ -67,8 +68,11 @@ class Cart extends Component {
         <hr id="checkout_hr"/>
         <div id="checkout_div">
           <h3>Checkout</h3>
+          <h5 id="dropin_loading">Loading...</h5>
           <div id="dropin-container"></div>
-          <button id="submit-button">Request payment method</button>
+          <button id="submit-button" className="btn btn-outline-success">
+            Submit Payment of ${price.toFixed(2)}
+          </button>
           <script>
           </script>
         </div>
@@ -87,21 +91,34 @@ class Cart extends Component {
     });*/
     var submitButton = document.querySelector('#submit-button');
 
-      braintree.dropin.create({
-        authorization: 'CLIENT_AUTHORIZATION',
-        container: '#dropin-container'
-      }).then(function (dropinInstance) {
-        submitButton.addEventListener('click', function () {
-          dropinInstance.requestPaymentMethod().then(function (payload) {
-            // Send payload.nonce to your server
-          }).catch(function (err) {
-            // Handle errors in requesting payment method
+    $.get('https://us-central1-estore-7e485.cloudfunctions.net/client_token',
+      function(data){
+        braintree.dropin.create({
+          authorization: data,
+          container: '#dropin-container'
+        }).then(function (dropinInstance) {
+          $('#dropin_loading').css('display', 'none');
+
+          submitButton.addEventListener('click', function () {
+            dropinInstance.requestPaymentMethod().then(function (payload) {
+              // Send payload.nonce to your server
+              console.log('sending payment to server');
+              if (this.props.user_cart.length === 0){
+                $('#alert_danger').text('Cart is empty')
+                  .fadeIn().delay(2000).fadeOut();
+              }
+            }).catch(function (err) {
+              // Handle errors in requesting payment method
+            });
           });
+        }).catch(function (err) {
+          // Handle any errors that might've occurred when creating Drop-in
+          console.error(err);
         });
-      }).catch(function (err) {
-        // Handle any errors that might've occurred when creating Drop-in
-        console.error(err);
-      });
+      }
+    ).fail(function(){
+      console.log('Error getting client token');
+    });
   }
 }
 

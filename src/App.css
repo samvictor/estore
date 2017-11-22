@@ -263,3 +263,6 @@ button.chooseFileButton {
   font-family: "raleway", sans-serif;
   font-size: 2.0em;
 }
+#checkout_div {
+  padding: 10px 5% 50px 5%;
+}
