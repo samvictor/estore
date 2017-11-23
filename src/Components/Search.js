@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ShowItems from './ShowItems'
-import logo from '../logo.svg';
+import logo from '../open.png';
 
 class Search extends Component {
   render() {
@@ -11,7 +11,6 @@ class Search extends Component {
           <h1 className="App-title">Welcome to our Store</h1>
         </header>
         <p className="App-intro">
-          Search page<br/>
           Searching for {this.props.search_term}
         </p>
         <ShowItems items={this.props.items}

@@ -37,6 +37,26 @@ class Navbar extends Component {
         <Link to="admin" className="nav-link" sref="admin">Admin{(this.props.page==='Admin')?<span className="sr-only">(current)</span>:""}</Link>
       </li>);
 
+    let cart_btn = null;
+    if (this.props.user !== null) {
+      if (this.props.page === 'cart') {
+        cart_btn =
+          <Link to="cart">
+            <button id="cart_btn"
+                  className="btn btn-outline-success my-2 my-sm-0 active"
+                  type="submit">Cart</button>
+          </Link>
+      }
+      else {
+        cart_btn =
+          <Link to="cart">
+            <button id="cart_btn"
+                  className="btn btn-outline-success my-2 my-sm-0"
+                  type="submit">Cart</button>
+          </Link>
+      }
+    }
+
     let login_btn;
     if (this.props.user === null)
       login_btn = <Link to="login">
@@ -75,9 +95,7 @@ class Navbar extends Component {
                     onKeyUp={this.search_keyup}/>
 
             )} />
-            <Link to="cart">
-              <button id="cart_btn" className="btn btn-outline-success my-2 my-sm-0" type="submit">Cart</button>
-            </Link>
+            {cart_btn}
             {login_btn}
           </div>
         </div>

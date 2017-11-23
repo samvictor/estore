@@ -3,7 +3,7 @@
 }
 
 .App-logo {
-  animation: App-logo-spin infinite 20s linear;
+  /*animation: App-logo-spin infinite 20s linear;*/
   height: 80px;
 }
 
@@ -42,8 +42,8 @@ button, a {
 }
 
 #search {
-  width: calc(100% - 200px);
-  margin-right: 0px !important;
+  width: calc(100% - 150px);
+  margin-right: 5px !important;
 }
 
 .nav-link {
@@ -52,7 +52,7 @@ button, a {
 
 #cart_btn {
   margin-right: 5px;
-  margin-left: 5px;
+  margin-left: 0px;
 }
 
 /* SHOW ITEMS */
@@ -74,6 +74,7 @@ button, a {
 .item_img_div {
   height: 280px;
   background-color: rgba(240, 240, 240, 30);
+  background: radial-gradient(#fff 60%, #ddd);
   margin-bottom: 10px;
 }
 .item_img {
@@ -149,17 +150,41 @@ button, a {
   margin-bottom: 10px;
   text-align: center;
 }
-@media (max-width: 576px) {
-  #forgot_div {
-    margin: 5px 5% 5px 5%;
-  }
-}
 .requirements {
   color: #444;
 }
 #login_divider{
   margin: 24px 20px;
 }
+
+/* about */
+#about_intro {
+  font-family: "Raleway", sans-serif;
+  margin-top: 10px;
+}
+#about_img_wrap {
+  max-width: 100%;
+  width: 375px;
+  max-height: 250px;
+  float: right;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+#about_img {
+  width: 100%;
+}
+#about_main {
+  margin: 20px 7%;
+}
+.about_text {
+  text-align: left;
+}
+.version {
+  color: #999;
+  margin-top: 60px;
+  display: block;
+}
+
 
 /* admin */
 #admin_div {
@@ -260,9 +285,23 @@ button.chooseFileButton {
   margin-bottom: 40px;
 }
 #checkout_div h3, #cart_title {
-  font-family: "raleway", sans-serif;
+  font-family: "Raleway", sans-serif;
   font-size: 2.0em;
 }
 #checkout_div {
   padding: 10px 5% 50px 5%;
+}
+
+/* mobile */
+@media (max-width: 576px) {
+  #forgot_div {
+    margin: 5px 5% 5px 5%;
+  }
+  #about_img_wrap {
+    float: none;
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
+  }
 }

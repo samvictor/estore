@@ -3,12 +3,12 @@
 //TODO: admin delete items
 //TODO: admin force user logout
 //TODO: on cart, cart nav btn Should light up
-//TODO: cart for "email"
 //TODO: cart remove items
-//TODO: Nothing in cart "nothing here"
 //TODO: past orders for users and admin
 //TODO: if user not logged in, don't show cart btn
 //TODO: in future, add temp cart
+//TODO: 'true' vs true
+//TODO: if you try to do anything while offline 'you are offline'
 /* updating site name:
 index.html head title
 email template sender and project name
@@ -49,41 +49,50 @@ class App extends Component {
     let database = firebase.database().ref('estore');
     let storage = firebase.storage().ref('estore');
 
-    let page = window.location.pathname.split('/')[1];
-    page = (page === undefined || page === '')? 'home': page;
+    let items = JSON.parse(localStorage.getItem('items'));
+    let items_dict = JSON.parse(localStorage.getItem('items_dict'));
+
+
     this.state = {
       'search_term': '',
       'site_name': 'eCommerce',
-      'page': page,
       'db': database,
       'storage': storage,
-      'items': [],
-      'items_dict': {},
+      'items': (items !== null)? items : [],
+      'items_dict': (items_dict !== null)? items_dict : {},
       'user': null,
       'user_is_admin': null,
       'user_cart': [],
+      'user_cart_loaded': false,
     }
   }
 
-  handleSearch(search_term){
+  get_page(location) {
+    let page = location.split('/')[1];
+    page = (page === undefined || page === '' || page === 'index.html')
+              ? 'home' : page;
+
+    return page;
+  }
+
+  handle_search(search_term){
     this.setState({'search_term': search_term});
   }
 
   render() {
     document.title = "eCommerce";
 
+
     return (
       <Router>
         <div className="App">
           <Route path="/" render={(props) => {
-            let page = props.location.pathname.split('/')[1];
-            page = (page === undefined || page === '')? 'home': page;
-            return <Navbar page={page}
-                      search2={this.handleSearch.bind(this)}
+            return <Navbar page={this.get_page(window.location.pathname)}
+                      search2={this.handle_search.bind(this)}
                       user={this.state.user}
                       user_is_admin={this.state.user_is_admin}/>
           }} />
-          <Route path="/:path(home|)" render={() => (
+          <Route path="/:path(home||index.html)" render={() => (
             <Home items={this.state.items}
                   user={this.state.user}
                   db={this.state.db}
@@ -112,7 +121,8 @@ class App extends Component {
                     items={this.state.items}
                     items_dict={this.state.items_dict}
                     db={this.state.db}
-                    user_cart={this.state.user_cart}/>
+                    user_cart={this.state.user_cart}
+                    user_cart_loaded={this.state.user_cart_loaded}/>
           )} />
           <Alerts />
         </div>
@@ -137,6 +147,8 @@ class App extends Component {
 
         return 0
       });
+      localStorage.setItem('items', JSON.stringify(items_list));
+      localStorage.setItem('items_dict', JSON.stringify(items));
       this.setState({'items': items_list, 'items_dict': items});
     });
 
@@ -163,13 +175,14 @@ class App extends Component {
             }
             for_state['user_cart'] = temp_cart;
           }
+          for_state['user_cart_loaded'] = true;
 
           this.setState(for_state);
         });
       } else {
         // No user is signed in.
         this.setState({'user': null, 'user_is_admin': 'false',
-                'user_cart': []});
+                'user_cart': [], 'user_cart_loaded': true});
       }
     });
 

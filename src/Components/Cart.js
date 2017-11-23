@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import logo from '../logo.svg';
+import logo from '../open.png';
 /*global braintree*/
 /*global $*/
 
@@ -13,7 +13,10 @@ class Cart extends Component {
     let short_description;
 
     if(cart.length === 0){
-      for_ret = [<h3 className="loading_items">Loading...</h3>];
+      if(this.props.user_cart_loaded)
+        for_ret = [<h3 className="loading_items">Cart is Empty</h3>];
+      else
+        for_ret = [<h3 className="loading_items">Loading...</h3>];
     }
 
     for(var i = 0; i < cart.length; i++) {
@@ -53,7 +56,11 @@ class Cart extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to our Store</h1>
         </header>
-        <h3 id="cart_title">Cart for {props.user.email}</h3>
+        <h3 id="cart_title">Cart{
+          (this.props.user !== null)
+            ? " for "+this.props.user.email
+            :""
+        }</h3>
         <p className="App-intro">
           Total Price ${price.toFixed(2)}
           <button id="checkout_btn" className="btn btn-outline-success"
@@ -90,6 +97,7 @@ class Cart extends Component {
       console.log(err);
     });*/
     var submitButton = document.querySelector('#submit-button');
+    var user_cart = this.props.user_cart;
 
     $.get('https://us-central1-estore-7e485.cloudfunctions.net/client_token',
       function(data){
@@ -100,13 +108,15 @@ class Cart extends Component {
           $('#dropin_loading').css('display', 'none');
 
           submitButton.addEventListener('click', function () {
+            if (user_cart.length === 0){
+              $('#alert_danger').text('Cart is empty')
+                .fadeIn().delay(2000).fadeOut();
+              return;
+            }
+            console.log(user_cart)
             dropinInstance.requestPaymentMethod().then(function (payload) {
               // Send payload.nonce to your server
               console.log('sending payment to server');
-              if (this.props.user_cart.length === 0){
-                $('#alert_danger').text('Cart is empty')
-                  .fadeIn().delay(2000).fadeOut();
-              }
             }).catch(function (err) {
               // Handle errors in requesting payment method
             });

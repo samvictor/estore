@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ShowItems from './ShowItems'
-import logo from '../logo.svg';
+import logo from '../open.png';
 
 class Home extends Component {
   render() {
