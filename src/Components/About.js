@@ -49,7 +49,7 @@ class About extends Component {
             quo voluptas nulla pariatur?
           </p>
         </div>
-        <t className="version">verson 1.4</t>
+        <t className="version">verson 1.5</t>
       </div>
     );
   }

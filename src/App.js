@@ -2,13 +2,15 @@
 //TODO: rewrite image uploader
 //TODO: admin delete items
 //TODO: admin force user logout
-//TODO: on cart, cart nav btn Should light up
 //TODO: cart remove items
-//TODO: past orders for users and admin
-//TODO: if user not logged in, don't show cart btn
 //TODO: in future, add temp cart
 //TODO: 'true' vs true
 //TODO: if you try to do anything while offline 'you are offline'
+//TODO: if you regain internet, update images and everything else
+//TODO: on logout while in cart, redirect out of cart
+//TODO: email mobile keyboard
+//TODO: search, user order history, admin order history
+
 /* updating site name:
 index.html head title
 email template sender and project name
@@ -16,7 +18,7 @@ render document.title
 change index.html theme color
 manifest.json name and theme color */
 /*
-  Written by Sam Inniss for Connie
+  Written by Sam Inniss
   SamInniss.com
   License: MIT
 */
@@ -60,6 +62,7 @@ class App extends Component {
       'storage': storage,
       'items': (items !== null)? items : [],
       'items_dict': (items_dict !== null)? items_dict : {},
+      'items_loaded': (items !== null)? true : false,
       'user': null,
       'user_is_admin': null,
       'user_cart': [],
@@ -94,6 +97,7 @@ class App extends Component {
           }} />
           <Route path="/:path(home||index.html)" render={() => (
             <Home items={this.state.items}
+                  items_loaded={this.state.items_loaded}
                   user={this.state.user}
                   db={this.state.db}
                   user_cart={this.state.user_cart}/>
@@ -149,7 +153,8 @@ class App extends Component {
       });
       localStorage.setItem('items', JSON.stringify(items_list));
       localStorage.setItem('items_dict', JSON.stringify(items));
-      this.setState({'items': items_list, 'items_dict': items});
+      this.setState({'items': items_list, 'items_dict': items,
+            'items_loaded': true});
     });
 
     firebase.auth().onAuthStateChanged((user) => {

@@ -39,7 +39,7 @@ class Login extends Component {
     }
     if (password.length < 6){
       $('#alert_danger').text('Password must be at least 6 characters long')
-              .fadeIn().delay(6000).fadeOut();
+              .fadeIn().delay(5000).fadeOut();
       return;
     }
     if (password.replace(/[a-zA-Z]/g, '').length === 0){
@@ -52,14 +52,14 @@ class Login extends Component {
     firebase.auth().createUserWithEmailAndPassword(email, password)
         .then(function(user){
           $('#alert_success').text('Account created. You are signed in.').fadeIn()
-                  .delay(7000).fadeOut();
+                  .delay(5000).fadeOut();
 
           let uid = user.uid;
           firebase.database().ref('estore/users/'+uid)
               .set({'is_admin': 'false', 'email': user.email});
         }).catch(function(error){
           $('#alert_danger').text(error.message).fadeIn()
-                  .delay(10000).fadeOut();
+                  .delay(7000).fadeOut();
         });
 
   }
@@ -75,13 +75,13 @@ class Login extends Component {
     firebase.auth().signInWithEmailAndPassword(email, pass).then(
       function () {
         $('#alert_success').text('You are logged in')
-            .fadeIn().delay(4000).fadeOut();
+            .fadeIn().delay(3000).fadeOut();
       }
       ,function(error) {
         var error_message = error.message;
 
         $('#alert_danger').text(error_message)
-            .fadeIn().delay(10000).fadeOut();
+            .fadeIn().delay(7000).fadeOut();
       });
   }
 
@@ -110,7 +110,7 @@ class Login extends Component {
                 let email = document.querySelector('#forgot_email').value;
                 if (email === ''){
                   $('#alert_danger').text('Please enter your email address')
-                          .fadeIn().delay(5000).fadeOut();
+                          .fadeIn().delay(4000).fadeOut();
                   return;
                 }
                 auth.sendPasswordResetEmail(email)
@@ -120,7 +120,7 @@ class Login extends Component {
                               .fadeIn().delay(7000).fadeOut();
                     }).catch(function(error){
                       $('#alert_danger').text(error.message)
-                              .fadeIn().delay(10000).fadeOut();
+                              .fadeIn().delay(7000).fadeOut();
 
                     });
               }}>

@@ -6,7 +6,7 @@ class ShowItems extends Component {
     let user = this.props.user;
     if(user === null) {
       $('#alert_info').text('Please login before adding items to cart')
-              .fadeIn().delay(6000).fadeOut();
+              .fadeIn().delay(5000).fadeOut();
       return;
     }
     let for_db = {};
@@ -21,7 +21,7 @@ class ShowItems extends Component {
                 .text((in_cart)?'Item removed from cart':'Item added to cart')
                 .fadeIn().delay(1000).fadeOut();
       }).catch(function(error){
-        $('#alert_danger').text(error.message).fadeIn().delay(10000).fadeOut();
+        $('#alert_danger').text(error.message).fadeIn().delay(7000).fadeOut();
       });
   }
 
@@ -32,7 +32,13 @@ class ShowItems extends Component {
     let short_description;
 
     if(items.length === 0){
-      for_ret = [<h3 className="loading_items">Loading...</h3>];
+      if (this.props.items_loaded) {
+        for_ret = [<h3 className="loading_items">
+          No items available for purchase. Check back later.
+        </h3>];
+      }
+      else
+        for_ret = [<h3 className="loading_items">Loading...</h3>];
     }
 
     for(var i = 0; i < items.length; i++) {

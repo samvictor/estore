@@ -8,7 +8,7 @@ class Navbar extends Component {
     firebase.auth().signOut().then(function() {
       // Sign-out successful.
       $('#alert_success').text('You are logged out')
-          .fadeIn().delay(4000).fadeOut();
+          .fadeIn().delay(3000).fadeOut();
     }).catch(function(error) {
       console.log('signout failed', error);
     });

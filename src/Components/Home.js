@@ -14,6 +14,7 @@ class Home extends Component {
           Browse our collection below.
         </p>
         <ShowItems items={this.props.items}
+                   items_loaded={this.props.items_loaded}
                    user={this.props.user}
                    db={this.props.db}
                    user_cart={this.props.user_cart}

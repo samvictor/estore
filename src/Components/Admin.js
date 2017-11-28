@@ -9,28 +9,9 @@ import ImageUploader from 'react-images-upload';
 class Admin extends Component {
   constructor(props) {
     super(props);
-    this.state = { 'pictures': {}, 'items': []};
+    this.state = { 'pictures': {}, 'items': [], 'items_loaded': false};
   }
-  componentWillMount() {
-    firebase.database().ref('estore/items').once('value', (snap) => {
-        let items = snap.val();
-        let items_list = [];
-        for (var key in items) {
-          items_list.push(items[key]);
-        }
-        // sort decending by time
-        items_list.sort(function(b, a){
-          if (a.time < b.time )
-            return -1
 
-          if (a.time > b.time)
-            return 1
-
-          return 0
-        });
-        this.setState({'items': items_list});
-      });
-  }
   onDrop(item_id, new_pic) {
     console.log('old state is ', JSON.stringify(this.state));
     let pictures = this.state.pictures;
@@ -55,13 +36,13 @@ class Admin extends Component {
 
       if (temp_item_id === '') {
         $('#alert_danger').text('Item name cannot be blank').fadeIn()
-                  .delay(7000).fadeOut();
+                  .delay(4000).fadeOut();
         $('#alert_info').fadeOut();
         return;
       }
       if (document.querySelector('#new_item_price').value === '') {
         $('#alert_danger').text('Price is invalid').fadeIn()
-                  .delay(7000).fadeOut();
+                  .delay(3000).fadeOut();
         $('#alert_info').fadeOut();
         return;
       }
@@ -85,13 +66,13 @@ class Admin extends Component {
       // not new item
       if (document.querySelector('#'+target+'_name').value === '') {
         $('#alert_danger').text('Item name cannot be blank').fadeIn()
-                  .delay(7000).fadeOut();
+                  .delay(4000).fadeOut();
         $('#alert_info').fadeOut();
         return;
       }
       if (document.querySelector('#'+target+'_price').value === '') {
         $('#alert_danger').text('Price is invalid').fadeIn()
-                  .delay(7000).fadeOut();
+                  .delay(3000).fadeOut();
         $('#alert_info').fadeOut();
         return;
       }
@@ -130,15 +111,15 @@ class Admin extends Component {
           $('#alert_info').fadeOut();
           if (target === 'new_item')
             $('#alert_success').text('Item created. Reload to see new item.').fadeIn()
-                .delay(10000).fadeOut();
+                .delay(2000).fadeOut();
           else
             $('#alert_success').text('Item updated. Reload to see update.').fadeIn()
-                .delay(10000).fadeOut();
+                .delay(2000).fadeOut();
         },
         function(error){
           console.log('update failed: ', error.message);
           $('#alert_info').fadeOut();
-          $('#alert_danger').text(error.message).fadeIn().delay(10000).fadeOut();
+          $('#alert_danger').text(error.message).fadeIn().delay(7000).fadeOut();
         });
     }
 
@@ -174,7 +155,7 @@ class Admin extends Component {
       }, function(error) {
         $('#alert_info').fadeOut();
         $('#alert_danger').text('Error: '+error.message).fadeIn()
-            .delay(10000).fadeOut();
+            .delay(7000).fadeOut();
         console.log(error.message);
     }, function() {
       // Upload completed successfully, now we can get the download URL
@@ -191,7 +172,10 @@ class Admin extends Component {
     let short_description;
 
     if(items.length === 0){
-      for_ret = [<h3 className="loading_items">Loading...</h3>];
+      if(this.state.items_loaded)
+        for_ret = [<h3 className="loading_items">No Items</h3>];
+      else
+        for_ret = [<h3 className="loading_items">Loading...</h3>];
     }
 
     for(var i = 0; i < items.length; i++) {
@@ -282,6 +266,25 @@ class Admin extends Component {
       pictures['new_item'] = null;
       this.setState({'pictures': pictures});
     });*/
+
+    firebase.database().ref('estore/items').once('value', (snap) => {
+        let items = snap.val();
+        let items_list = [];
+        for (var key in items) {
+          items_list.push(items[key]);
+        }
+        // sort decending by time
+        items_list.sort(function(b, a){
+          if (a.time < b.time )
+            return -1
+
+          if (a.time > b.time)
+            return 1
+
+          return 0
+        });
+        this.setState({'items': items_list, 'items_loaded': true});
+      });
   }
 }
 

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import logo from '../open.png';
+import {Redirect} from 'react-router-dom';
 /*global braintree*/
 /*global $*/
 
@@ -52,6 +53,11 @@ class Cart extends Component {
 
     return (
       <div id="cart_div">
+        {
+          (this.props.user === null)
+            ? <Redirect to="/home"/>
+            : ''
+        }
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to our Store</h1>
