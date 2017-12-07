@@ -4,12 +4,14 @@
 //TODO: admin force user logout
 //TODO: cart remove items
 //TODO: in future, add temp cart
-//TODO: 'true' vs true
 //TODO: if you try to do anything while offline 'you are offline'
 //TODO: if you regain internet, update images and everything else
-//TODO: on logout while in cart, redirect out of cart
 //TODO: email mobile keyboard
 //TODO: search, user order history, admin order history
+//TODO: update banner with blurred background image
+//TODO: reload in cart fails
+//TODO: login working...
+
 
 /* updating site name:
 index.html head title
@@ -65,6 +67,7 @@ class App extends Component {
       'items_loaded': (items !== null)? true : false,
       'user': null,
       'user_is_admin': null,
+      'no_user': null,
       'user_cart': [],
       'user_cart_loaded': false,
     }
@@ -126,7 +129,8 @@ class App extends Component {
                     items_dict={this.state.items_dict}
                     db={this.state.db}
                     user_cart={this.state.user_cart}
-                    user_cart_loaded={this.state.user_cart_loaded}/>
+                    user_cart_loaded={this.state.user_cart_loaded}
+                    no_user={this.state.no_user}/>
           )} />
           <Alerts />
         </div>
@@ -181,13 +185,15 @@ class App extends Component {
             for_state['user_cart'] = temp_cart;
           }
           for_state['user_cart_loaded'] = true;
+          for_state['no_user'] = 'false';
 
           this.setState(for_state);
         });
       } else {
         // No user is signed in.
         this.setState({'user': null, 'user_is_admin': 'false',
-                'user_cart': [], 'user_cart_loaded': true});
+                'user_cart': [], 'user_cart_loaded': true,
+                'no_user': 'true'});
       }
     });
 

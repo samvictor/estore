@@ -5,16 +5,16 @@ import {Redirect} from 'react-router-dom';
 /*global $*/
 
 class Cart extends Component {
-  render() {
+  handle_props(props) {
     let price = 0;
-    let items = this.props.items_dict;
-    let cart = this.props.user_cart;
+    let items = props.items_dict;
+    let cart = props.user_cart;
     let this_item;
     let for_ret = [];
     let short_description;
 
     if(cart.length === 0){
-      if(this.props.user_cart_loaded)
+      if(props.user_cart_loaded)
         for_ret = [<h3 className="loading_items">Cart is Empty</h3>];
       else
         for_ret = [<h3 className="loading_items">Loading...</h3>];
@@ -50,11 +50,42 @@ class Cart extends Component {
         </div>
         </div> );
     }
+    return [for_ret, price];
+  }
 
+  constructor(props) {
+    super(props);
+
+    let from_handle_props = this.handle_props(this.props);
+    let items_xml = from_handle_props[0];
+    let price = from_handle_props[1];
+
+    this.state = {
+      'price': price,
+      'cart': this.props.user_cart,
+      'items': this.props.items_dict,
+      'items_xml': items_xml,
+    };
+  }
+
+  componentWillReceiveProps(next_props) {
+    let from_handle_props = this.handle_props(next_props);
+    let items_xml = from_handle_props[0];
+    let price = from_handle_props[1];
+
+    this.setState({
+      'price': price,
+      'cart': next_props.user_cart,
+      'items': next_props.items_dict,
+      'items_xml': items_xml,
+    });
+  }
+
+  render() {
     return (
       <div id="cart_div">
         {
-          (this.props.user === null)
+          (this.props.no_user === 'true')
             ? <Redirect to="/home"/>
             : ''
         }
@@ -68,7 +99,7 @@ class Cart extends Component {
             :""
         }</h3>
         <p className="App-intro">
-          Total Price ${price.toFixed(2)}
+          Total Price ${this.state.price.toFixed(2)}
           <button id="checkout_btn" className="btn btn-outline-success"
                   onClick={function(){
                     document.querySelector('#checkout_div')
@@ -76,7 +107,7 @@ class Cart extends Component {
                   }}>Checkout</button>
         </p>
         <div id="show_items" className="row">
-          {for_ret}
+          {this.state.items_xml}
         </div>
         <hr id="checkout_hr"/>
         <div id="checkout_div">
@@ -84,13 +115,36 @@ class Cart extends Component {
           <h5 id="dropin_loading">Loading...</h5>
           <div id="dropin-container"></div>
           <button id="submit-button" className="btn btn-outline-success">
-            Submit Payment of ${price.toFixed(2)}
+            Submit Payment of ${this.state.price.toFixed(2)}
           </button>
           <script>
           </script>
         </div>
       </div>
     );
+  }
+
+  handle_submit(dropinInstance){
+    var user_cart = this.props.user_cart;
+    var user = this.props.user;
+    var sub_price = this.state.price;
+
+    if (user_cart.length === 0){
+      $('#alert_danger').text('Cart is empty')
+        .fadeIn().delay(2000).fadeOut();
+      return;
+    }
+    dropinInstance.requestPaymentMethod().then(function (payload) {
+      $.post('https://us-central1-estore-7e485.cloudfunctions.net/checkout',
+        {'uid': user.uid, 'email': user.email,
+                'nonce': payload.nonce, 'price': sub_price})
+        .done(function(checkout_data){
+          console.log('checkout data', checkout_data);
+        });
+    }).catch(function (err) {
+      // Handle errors in requesting payment method
+      console.log('requesting payment method: ', err);
+    });
   }
 
   componentDidMount(){
@@ -103,7 +157,7 @@ class Cart extends Component {
       console.log(err);
     });*/
     var submitButton = document.querySelector('#submit-button');
-    var user_cart = this.props.user_cart;
+    var temp_this = this;
 
     $.get('https://us-central1-estore-7e485.cloudfunctions.net/client_token',
       function(data){
@@ -113,23 +167,11 @@ class Cart extends Component {
         }).then(function (dropinInstance) {
           $('#dropin_loading').css('display', 'none');
 
-          submitButton.addEventListener('click', function () {
-            if (user_cart.length === 0){
-              $('#alert_danger').text('Cart is empty')
-                .fadeIn().delay(2000).fadeOut();
-              return;
-            }
-            console.log(user_cart)
-            dropinInstance.requestPaymentMethod().then(function (payload) {
-              // Send payload.nonce to your server
-              console.log('sending payment to server');
-            }).catch(function (err) {
-              // Handle errors in requesting payment method
-            });
-          });
+          submitButton.addEventListener('click', temp_this.handle_submit
+                                                  .bind(temp_this, dropinInstance));
         }).catch(function (err) {
           // Handle any errors that might've occurred when creating Drop-in
-          console.error(err);
+          console.log('creating dropin: ', err);
         });
       }
     ).fail(function(){
