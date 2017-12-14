@@ -15,10 +15,16 @@ import {
 import firebase from 'firebase';
 
 
-import FirstTime from './components/FirstTime';
 import styles from './components/Styles';
 import SamNav from './components/SamNav';
 import SamPath from './components/SamPath';
+import FirstTime from './components/FirstTime';
+import Home from './components/Home';
+import Admin from './components/Admin';
+import History from './components/History';
+import Search from './components/Search';
+import Cart from './components/Cart';
+import Settings from './components/Settings';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -36,7 +42,7 @@ export default class App extends Component<{}> {
       'first_time': null,
       'log': 'log: ',
       'firebase_ready': false,
-      'path': 'cart',
+      'path': 'home',
     };
 
     AsyncStorage.getItem('first_time')
@@ -66,55 +72,60 @@ export default class App extends Component<{}> {
   }
 
   set_app_state(new_state) {
-    this.setState({'log': 'setting state'});
       this.setState(new_state);
   }
 
   render() {
     let tabs = [
+      {'path': 'admin', 'name': 'Admin/History'},
+      {'path': 'search', 'name': 'Search'},
       {'path': 'home', 'name': 'Home'},
-      {'path': 'settings', 'name': 'Settings'},
       {'path': 'cart', 'name': 'Cart'},
+      {'path': 'settings', 'name': 'Settings'},
     ];
 
     return (
-      //<View>
-        //<Text>{this.state.log}</Text>
-        <SamNav path={this.state.path} tabs={tabs}
-              set_app_state={this.set_app_state.bind(this)}
-              app_log={this.state.log}
-              app_state={this.state}>
-          <SamPath path='home'>
-            <Text>Home {this.state.log}</Text>
-          </SamPath>
-          <SamPath path='settings'  default='true'>
-            <Text>Settings</Text>
-          </SamPath>
-          <SamPath path='cart'>
-            <Text>Cart</Text>
-          </SamPath>
-          <SamPath path='first_time' show_tabs='false'>
-            <FirstTime app_state={this.state}
-                    set_app_state={this.set_app_state.bind(this)}/>
-          </SamPath>
-        </SamNav>
-      //</View>
+      <SamNav path={this.state.path} tabs={tabs}
+            set_app_state={this.set_app_state.bind(this)}
+            app_log={this.state.log}
+            app_state={this.state}>
 
+        <SamPath path='home' default='true'>
+          <Home app_state={this.state}
+                  set_app_state={this.set_app_state.bind(this)}/>
+        </SamPath>
 
-      /*<View style={[styles.container]}>
-        <Text style={styles.welcome}>
-          {this.state.log}
-        </Text>
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit App.js
-        </Text>
-        <Text style={styles.instructions}>
-          {instructions}
-        </Text>
-      </View>*/
+        <SamPath path='admin'>
+          <Admin app_state={this.state}
+                  set_app_state={this.set_app_state.bind(this)}/>
+        </SamPath>
+
+        <SamPath path='history'>
+          <History app_state={this.state}
+                  set_app_state={this.set_app_state.bind(this)}/>
+        </SamPath>
+
+        <SamPath path='search'>
+          <Search app_state={this.state}
+                  set_app_state={this.set_app_state.bind(this)}/>
+        </SamPath>
+
+        <SamPath path='cart'>
+          <Cart app_state={this.state}
+                  set_app_state={this.set_app_state.bind(this)}/>
+        </SamPath>
+
+        <SamPath path='settings'>
+          <Settings app_state={this.state}
+                  set_app_state={this.set_app_state.bind(this)}/>
+        </SamPath>
+
+        <SamPath path='first_time' show_tabs='false'>
+          <FirstTime app_state={this.state}
+                  set_app_state={this.set_app_state.bind(this)}/>
+        </SamPath>
+
+      </SamNav>
     );
   }
 

@@ -3,6 +3,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  PixelRatio
 } from 'react-native';
 
 import styles from './Styles';
@@ -51,11 +52,24 @@ export default class SamNav extends Component<{}> {
 
     let this_tab = null;
     let for_tabs = [];
-    let text_style = {textAlign: 'center'};
     let tab_style = {
       flex: 1,
-      paddingVertical: 10,
+      justifyContent: 'space-between',
+      flexDirection: 'column',
+      alignItems: 'center',
+      height: 45,
     };
+    let text_style = {
+      textAlign: 'center',
+      flex: 1,
+      paddingTop: 10,
+    };
+    let active_style = {
+      fontWeight: 'bold',
+      fontSize: 17,
+      paddingTop: 8,
+    }
+    let bar_color = '';
 
     function tab_pressed(this_tab) {
       this.setState({'log': 'tab pressed, '+nextProps.set_app_state.toString()});
@@ -64,11 +78,23 @@ export default class SamNav extends Component<{}> {
 
     for (var i = 0; i < nextProps.tabs.length; i++){
       this_tab = nextProps.tabs[i];
+      if(this_tab.path === nextProps.path)
+        bar_color = '#d61010';
+      else
+        bar_color = 'white';
+
       for_tabs[i] =
       <TouchableOpacity
             style={tab_style}
             onPress={tab_pressed.bind(this, this_tab)}>
-        <Text style={text_style}>{this_tab.name}</Text>
+        <View style={{width: '100%', height: 2, backgroundColor: bar_color}}></View>
+        <Text style={[
+              text_style,
+              (this_tab.path === nextProps.path)? active_style :'',
+            ]}>
+          {this_tab.name}
+        </Text>
+        <View></View>
       </TouchableOpacity>;
     }
 
@@ -92,11 +118,14 @@ export default class SamNav extends Component<{}> {
         justifyContent: 'space-between',
         alignItems: 'center'
       }}>
-        <View style={{flex: 1, backgroundColor: 'blue', width: '100%'}}>
+        <View style={{flex: 1, width: '100%'}}>
           {this.state.render_me}
         </View>
         {(show_tabs === 'true')
-          ?<View
+          ?[<View style={{backgroundColor: 'grey', height: 1/PixelRatio.get(),
+                            width: '100%'}}>
+            </View>,
+            <View
             style={{
               flexDirection: 'row',
               width: '100%',
@@ -104,7 +133,7 @@ export default class SamNav extends Component<{}> {
               alignItems: 'center',
             }}>
             {this.state.tabs}
-          </View>
+          </View>]
           :null
         }
       </View>
