@@ -8,6 +8,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 10,
   },
+  h5: {
+    fontSize: 20,
+    textAlign: 'center',
+    margin: 5,
+  },
   white_text: {
     color: '#ffffff',
   },
