@@ -37,12 +37,36 @@ export default class App extends Component<{}> {
   constructor(props){
     super(props);
 
+    firebase.initializeApp({
+      apiKey: "AIzaSyCI7wGvpUOMSY-h9tHoJogBmEmhoZe0U_A",
+      authDomain: "estore-7e485.firebaseapp.com",
+      databaseURL: "https://estore-7e485.firebaseio.com",
+      projectId: "estore-7e485",
+      storageBucket: "estore-7e485.appspot.com",
+    });
+    let database = firebase.database().ref('estore');
+    let storage = firebase.storage().ref('estore');
+
     this.state = {
       'storage_loaded': false,
       'first_time': null,
       'log': 'log: ',
       'firebase_ready': false,
       'path': 'home',
+      'items_loaded': false,
+      'items': [],
+      'items_dict': {},
+      'user': null,
+      'user_loaded': false,
+      'user_is_admin': null,
+      'no_user': null,
+      'user_cart': [],
+      'user_cart_loaded': false,
+      'db': database,
+      'storage': storage,
+      'searching': false,
+      'search_term': '',
+      'found_items': [],
     };
 
     AsyncStorage.getItem('first_time')
@@ -55,20 +79,6 @@ export default class App extends Component<{}> {
         }
         this.setState({'log': this.state.log+'\nres is '+res});
       });
-  }
-
-  componentDidMount() {
-    try {
-      firebase.initializeApp({
-        apiKey: "AIzaSyCI7wGvpUOMSY-h9tHoJogBmEmhoZe0U_A",
-        authDomain: "estore-7e485.firebaseapp.com",
-        databaseURL: "https://estore-7e485.firebaseio.com",
-        projectId: "estore-7e485",
-        storageBucket: "estore-7e485.appspot.com",
-      });
-    }
-    catch(e){}
-    this.setState({'log': 'setting state in will mount'});
   }
 
   set_app_state(new_state) {
@@ -127,6 +137,87 @@ export default class App extends Component<{}> {
 
       </SamNav>
     );
+  }
+
+
+  componentDidMount() {
+    AsyncStorage.multiGet(['items', 'items_dict'])
+      .then((res) => {
+        let items = [];
+        let items_dict = {};
+        if(res[0][1] !== null) {
+          try {
+            items = JSON.parse(res[0][1]);
+          }
+          catch(e){}
+        }
+        if(res[1][1] !== null) {
+          try {
+            items_dict = JSON.parse(res[1][1]);
+          }
+          catch(e){}
+        }
+        this.setState({'items': items, 'items_dict': items_dict,
+                          'items_loaded': true});
+      });
+
+    firebase.database().ref('estore').child('items').on('value', (snap) => {
+      let items = snap.val();
+      let items_list = [];
+      for (var key in items) {
+        items_list.push(items[key]);
+      }
+      // sort decending by time
+      items_list.sort(function(b, a){
+        if (a.time < b.time )
+          return -1
+
+        if (a.time > b.time)
+          return 1
+
+        return 0
+      });
+      AsyncStorage.setItem('items', JSON.stringify(items_list));
+      AsyncStorage.setItem('items_dict', JSON.stringify(items));
+      this.setState({'items': items_list, 'items_dict': items,
+            'items_loaded': true});
+    });
+
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // User is signed in.
+        firebase.database().ref('estore').child('users/'+user.uid)
+          .on('value', (snap) => {
+            if (snap.val() === null) {
+              this.setState({'user': user, 'user_loaded': true});
+              return;
+            }
+            let user_data = snap.val();
+            let for_state = {'user': user, 'user_loaded': true};
+            if (user_data['is_admin'] === 'true')
+              for_state['user_is_admin'] = 'true';
+
+            let temp_cart = [];
+            if (user_data['cart'] === undefined)
+              for_state['user_cart'] = [];
+            else {
+              for(var key in user_data['cart']){
+                temp_cart.push(user_data['cart'][key]['item_id']);
+              }
+              for_state['user_cart'] = temp_cart;
+            }
+            for_state['user_cart_loaded'] = true;
+            for_state['no_user'] = 'false';
+
+            this.setState(for_state);
+          });
+        } else {
+          // No user is signed in.
+          this.setState({'user': null, 'user_is_admin': 'false',
+                  'user_cart': [], 'user_cart_loaded': true,
+                  'no_user': 'true', 'user_loaded': true});
+        }
+      });
   }
 
 }

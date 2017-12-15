@@ -13,6 +13,7 @@ import {
 import TextInputState from 'react-native/lib/TextInputState'
 
 import styles from './Styles';
+import gen_items from './ShowItems';
 
 
 export default class Home extends Component<{}> {
@@ -48,14 +49,7 @@ export default class Home extends Component<{}> {
               )}>
           <View style={{width: '80%', height: 150, backgroundColor: 'white'}}>
           </View>
-          <View style={{width: '80%', height: 100, backgroundColor: 'pink', margin: 10}}>
-          </View>
-          <View style={{width: '80%', height: 100, backgroundColor: 'pink', margin: 100}}>
-          </View>
-          <View style={{width: '80%', height: 100, backgroundColor: 'pink', margin: 100}}>
-          </View>
-          <View style={{width: '80%', height: 100, backgroundColor: 'pink', margin: 100}}>
-          </View>
+          {gen_items(this.props.app_state)}
         </ScrollView>
         <Animated.View style={[home_styles.ani_view,
                 {opacity: view_opacity, top: view_top}]}>
