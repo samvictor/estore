@@ -14,12 +14,13 @@ import TextInputState from 'react-native/lib/TextInputState'
 import styles from './Styles';
 
 
-export default class FirstTime extends Component<{}> {
+export default class Login extends Component<{}> {
   constructor(props){
     super(props);
 
     this.state = {
-      'email': '', 'password': '',
+      'email': '',
+      'password': '',
       'log': 'ver 1',
     };
   }
@@ -69,6 +70,21 @@ export default class FirstTime extends Component<{}> {
             color='#339966'
             containerViewStyle={{width: '100%'}}
             onPress={(event) => {
+              this.props.set_app_state({'snack_msg': 'Logging in',
+                                        'snack_duration': 5000})
+              /*this.props.app_state.firebase.auth()
+                      .signInWithEmailAndPassword(email, pass).then(
+                function () {
+                  $('#alert_success').text('You are logged in')
+                      .fadeIn().delay(3000).fadeOut();
+                }
+                ,function(error) {
+                  var error_message = error.message;
+
+                  $('#alert_danger').text(error_message)
+                      .fadeIn().delay(7000).fadeOut();
+                });*/
+
             }}
           />
         </View>
@@ -78,6 +94,10 @@ export default class FirstTime extends Component<{}> {
             color='#505050'
             containerViewStyle={{width: '100%'}}
             onPress={(event) => {
+              this.props.set_app_state({
+                'snack_msg': 'This section is still under construction',
+                'snack_duration': 3000
+              });
             }}
           />
         </View>
@@ -93,7 +113,7 @@ export default class FirstTime extends Component<{}> {
             }}
           />
         </View>
-        <Text style={styles.text}>{this.state.log+ this.props.app_state.log}</Text>
+        <Text style={styles.text}>{this.state.log+ this.state.email+this.state.password}</Text>
         <View style={{'height': '10%'}}>
         </View>
       </View>

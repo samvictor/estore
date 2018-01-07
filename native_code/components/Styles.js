@@ -72,6 +72,17 @@ const styles = StyleSheet.create({
   item_desc: {
     marginTop: 0,
     marginBottom: 16,
+  },
+
+  sam_snack: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#00000060',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 });
 

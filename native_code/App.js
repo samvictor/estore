@@ -18,7 +18,7 @@ import firebase from 'firebase';
 import styles from './components/Styles';
 import SamNav from './components/SamNav';
 import SamPath from './components/SamPath';
-import FirstTime from './components/FirstTime';
+import Login from './components/Login';
 import Home from './components/Home';
 import Admin from './components/Admin';
 import History from './components/History';
@@ -37,13 +37,16 @@ export default class App extends Component<{}> {
   constructor(props){
     super(props);
 
-    firebase.initializeApp({
-      apiKey: "AIzaSyCI7wGvpUOMSY-h9tHoJogBmEmhoZe0U_A",
-      authDomain: "estore-7e485.firebaseapp.com",
-      databaseURL: "https://estore-7e485.firebaseio.com",
-      projectId: "estore-7e485",
-      storageBucket: "estore-7e485.appspot.com",
-    });
+    try {
+      firebase.initializeApp({
+        apiKey: "AIzaSyCI7wGvpUOMSY-h9tHoJogBmEmhoZe0U_A",
+        authDomain: "estore-7e485.firebaseapp.com",
+        databaseURL: "https://estore-7e485.firebaseio.com",
+        projectId: "estore-7e485",
+        storageBucket: "estore-7e485.appspot.com",
+      });
+    }
+    catch(e){}
     let database = firebase.database().ref('estore');
     let storage = firebase.storage().ref('estore');
 
@@ -64,9 +67,12 @@ export default class App extends Component<{}> {
       'user_cart_loaded': false,
       'db': database,
       'storage': storage,
+      'firebase': firebase,
       'searching': false,
       'search_term': '',
       'found_items': [],
+      'snack_msg': '',
+      'snack_duration': 0,
     };
 
     AsyncStorage.getItem('first_time')
@@ -131,7 +137,7 @@ export default class App extends Component<{}> {
         </SamPath>
 
         <SamPath path='first_time' show_tabs='false'>
-          <FirstTime app_state={this.state}
+          <Login app_state={this.state}
                   set_app_state={this.set_app_state.bind(this)}/>
         </SamPath>
 

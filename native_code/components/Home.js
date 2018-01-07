@@ -29,12 +29,12 @@ export default class Home extends Component<{}> {
   render() {
     const scroll_height = 145;
     const view_opacity = this.state.scroll_y.interpolate({
-      inputRange: [0, scroll_height*1.3],
+      inputRange: [0, scroll_height*2],
       outputRange: [1, 0],
       extrapolate: 'clamp',
     });
     const view_top = this.state.scroll_y.interpolate({
-      inputRange: [0, scroll_height*1.6],
+      inputRange: [0, scroll_height*3],
       outputRange: [0, 0-scroll_height],
       extrapolate: 'clamp',
     });

@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import styles from './Styles';
+import SamSnack from './SamSnack';
 
 
 export default class SamNav extends Component<{}> {
@@ -120,6 +121,9 @@ export default class SamNav extends Component<{}> {
       }}>
         <View style={{flex: 1, width: '100%'}}>
           {this.state.render_me}
+
+          <SamSnack app_state={this.props.app_state}
+                    set_app_state={this.props.set_app_state}/>
         </View>
         {(show_tabs === 'true')
           ?[<View style={{backgroundColor: 'grey', height: 1/PixelRatio.get(),
