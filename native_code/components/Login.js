@@ -70,20 +70,22 @@ export default class Login extends Component<{}> {
             color='#339966'
             containerViewStyle={{width: '100%'}}
             onPress={(event) => {
-              this.props.set_app_state({'snack_msg': 'Logging in',
-                                        'snack_duration': 3000})
-              /*this.props.app_state.firebase.auth()
-                      .signInWithEmailAndPassword(email, pass).then(
+              this.props.app_state.firebase.auth()
+                      .signInWithEmailAndPassword(this.state.email,
+                                                  this.state.password)
+                      .then(
                 function () {
-                  $('#alert_success').text('You are logged in')
-                      .fadeIn().delay(3000).fadeOut();
-                }
-                ,function(error) {
-                  var error_message = error.message;
+                  AsyncStorage.setItem('first_time', 'false');
+                  this.props.set_app_state({'first_time': 'false',
+                                            'path': 'home',
+                                            'snack_msg': 'You are logged in',
+                                            'snack_duration': 3000});
 
-                  $('#alert_danger').text(error_message)
-                      .fadeIn().delay(7000).fadeOut();
-                });*/
+                }.bind(this)
+                ,function(error) {
+                  this.props.set_app_state({'snack_msg': error.message,
+                                            'snack_duration': 7000});
+                }.bind(this));
 
             }}
           />
@@ -113,7 +115,7 @@ export default class Login extends Component<{}> {
             }}
           />
         </View>
-        <Text style={styles.text}>{this.state.log+ this.state.email+this.state.password}</Text>
+        <Text style={styles.text}>{this.state.log}</Text>
         <View style={{'height': '10%'}}>
         </View>
       </View>

@@ -13,13 +13,17 @@ import {
 
 import styles from './Styles';
 
-function cart_btn(item_id, in_cart, app_state) {
+// call when cart btn pressed
+function cart_btn(parent_this, item_id, in_cart, app_state) {
   let user = app_state.user;
   if(user === null) {
-    //$('#alert_info').text('Please login before adding items to cart')
-    //        .fadeIn().delay(5000).fadeOut();
+    parent_this.props.set_app_state({
+                    'snack_msg': 'Please login before adding items to cart',
+                    'snack_duration': 5000
+    });
     return;
   }
+
   let for_db = {};
   if (in_cart)
     for_db['cart/'+item_id] = null;
@@ -28,15 +32,17 @@ function cart_btn(item_id, in_cart, app_state) {
 
   app_state.db.child('/users/'+user.uid).update(for_db)
     .then(function(){
-      //$('#alert_success')
-      //        .text((in_cart)?'Item removed from cart':'Item added to cart')
-      //        .fadeIn().delay(1000).fadeOut();
+      parent_this.props.set_app_state({'snack_msg': (in_cart)?
+                                                'Item removed from cart'
+                                                :'Item added to cart',
+                                'snack_duration': 1500});
     }).catch(function(error){
-      //$('#alert_danger').text(error.message).fadeIn().delay(7000).fadeOut();
+      parent_this.props.set_app_state({'snack_msg': error.message,
+                                'snack_duration': 7000});
     });
 }
 
-function gen_items(app_state) {
+function gen_items(parent_this, app_state) {
   let this_item = {};
   let items = app_state.items;
   let for_ret = [];
@@ -61,13 +67,14 @@ function gen_items(app_state) {
     let temp_btn;
     if(app_state.user_cart.includes(this_item.id)){
       temp_btn =
-        <Button onPress={cart_btn.bind(this, this_item.id, true, app_state)}
-                      title={'$'+this_item.price}>
+        <Button onPress={cart_btn.bind(this, parent_this, this_item.id, true, app_state)}
+                      title={'$'+this_item.price}
+                      color="green">
         </Button>;
     }
     else {
       temp_btn =
-        <Button onPress={cart_btn.bind(this, this_item.id, false, app_state)}
+        <Button onPress={cart_btn.bind(this, parent_this, this_item.id, false, app_state)}
                 title={'$'+this_item.price}>
         </Button>;
 

@@ -29,12 +29,12 @@ export default class Home extends Component<{}> {
   render() {
     const scroll_height = 145;
     const view_opacity = this.state.scroll_y.interpolate({
-      inputRange: [0, scroll_height*2],
+      inputRange: [0, scroll_height*3],
       outputRange: [1, 0],
       extrapolate: 'clamp',
     });
     const view_top = this.state.scroll_y.interpolate({
-      inputRange: [0, scroll_height*3],
+      inputRange: [0, scroll_height*4],
       outputRange: [0, 0-scroll_height],
       extrapolate: 'clamp',
     });
@@ -49,7 +49,7 @@ export default class Home extends Component<{}> {
               )}>
           <View style={{width: '80%', height: 150, backgroundColor: 'white'}}>
           </View>
-          {gen_items(this.props.app_state)}
+          {gen_items(this, this.props.app_state)}
         </ScrollView>
         <Animated.View style={[home_styles.ani_view,
                 {opacity: view_opacity, top: view_top}]}>
