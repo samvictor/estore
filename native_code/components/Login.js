@@ -71,7 +71,7 @@ export default class Login extends Component<{}> {
             containerViewStyle={{width: '100%'}}
             onPress={(event) => {
               this.props.set_app_state({'snack_msg': 'Logging in',
-                                        'snack_duration': 5000})
+                                        'snack_duration': 3000})
               /*this.props.app_state.firebase.auth()
                       .signInWithEmailAndPassword(email, pass).then(
                 function () {
