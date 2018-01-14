@@ -23,14 +23,44 @@ export default class Settings extends Component<{}> {
   }
 
   render() {
+    let log_btn = (this.props.app_state.user === null)
+      ? <Button
+        title='Login'
+        color='#339966'
+        containerViewStyle={{width: '100%'}}
+        onPress={(event) => {
+          this.props.set_app_state({'path': 'login'});
+        }}
+      />
+      : <Button
+        title='Logout'
+        color='#C62828'
+        containerViewStyle={{width: '100%'}}
+        onPress={(event) => {
+          this.props.app_state.firebase.auth().signOut();
+          this.props.set_app_state({
+            'snack_msg': 'You are logged out',
+            'snack_duration': 3000
+          });
+        }}
+      />;
+
     return (
       <View style={[styles.container, {backgroundColor: 'white'}]}>
-        <Text style={[styles.h3]}>
-          Settings
-        </Text>
-        <Image source={require("../img/open.png")}
-                style={{width: '30%', height: '30%'}}
-                resizeMode='contain'/>
+        <View style={[styles.fixed_top, styles.banner]}>
+          <Text style={[styles.h4, {color: 'white'}]}>
+            Settings
+          </Text>
+          <Text style={[styles.h6, styles.red_text]}>
+            { (this.props.app_state.user !== null)
+              ? this.props.app_state.user.email
+              : ''
+            }
+          </Text>
+        </View>
+        <View style={{width: '80%'}}>
+          {log_btn}
+        </View>
       </View>
     );
   }

@@ -42,9 +42,44 @@ function cart_btn(parent_this, item_id, in_cart, app_state) {
     });
 }
 
+
+// call when remove from cart btn pressed
+function remove_btn(parent_this, item_id, in_cart, app_state) {
+  let user = app_state.user;
+  if(user === null) {
+    parent_this.props.set_app_state({
+                    'snack_msg': 'Please login before using cart',
+                    'snack_duration': 5000
+    });
+    return;
+  }
+
+  let for_db = {};
+  for_db['cart/'+item_id] = null;
+
+  app_state.db.child('/users/'+user.uid).update(for_db)
+    .then(function(){
+      parent_this.props.set_app_state({'snack_msg': 'Item removed from cart',
+                                'snack_duration': 1500});
+    }).catch(function(error){
+      parent_this.props.set_app_state({'snack_msg': error.message,
+                                'snack_duration': 7000});
+    });
+}
+
 function gen_items(parent_this, app_state) {
   let this_item = {};
-  let items = app_state.items;
+  let items = [];
+  if (app_state.path === 'home')
+    items = app_state.items;
+  if (app_state.path === 'cart') {
+    let cart = app_state.user_cart;
+    let all_items = app_state.items_dict;
+    for (var j = 0; j < cart.length; j++){
+      items.push(all_items[cart[j]]);
+    }
+  }
+
   let for_ret = [];
   let short_description;
 
@@ -65,19 +100,31 @@ function gen_items(parent_this, app_state) {
       short_description = short_description.substring(0, 260) + '...';
     let item_url = (this_item.imgs === undefined)? '': this_item.imgs[0].url;
     let temp_btn;
-    if(app_state.user_cart.includes(this_item.id)){
-      temp_btn =
-        <Button onPress={cart_btn.bind(this, parent_this, this_item.id, true, app_state)}
-                      title={'$'+this_item.price}
-                      color="green">
-        </Button>;
-    }
-    else {
-      temp_btn =
-        <Button onPress={cart_btn.bind(this, parent_this, this_item.id, false, app_state)}
-                title={'$'+this_item.price}>
-        </Button>;
+    if (app_state.path === 'home') {
+      if(app_state.user_cart.includes(this_item.id)){
+        temp_btn =
+          <Button onPress={cart_btn.bind(this, parent_this,
+                                          this_item.id, true, app_state)}
+                        title={'$'+this_item.price}
+                        color="green">
+          </Button>;
+      }
+      else {
+        temp_btn =
+          <Button onPress={cart_btn.bind(this, parent_this,
+                                          this_item.id, false, app_state)}
+                  title={'$'+this_item.price}>
+          </Button>;
 
+      }
+    }
+    if(app_state.path === 'cart'){
+      temp_btn = <Button onPress={remove_btn.bind(this, parent_this,
+                                    this_item.id, false, app_state)}
+            title={'$'+this_item.price+'  |  Remove'}
+            color='#d61010'>
+
+      </Button>
     }
     for_ret.push(
       <View style={styles.item_shaddow}>

@@ -41,24 +41,30 @@ export default class Home extends Component<{}> {
 
     return (
       <View style={{flex: 1, width: '100%'}}>
-        <ScrollView style={[home_styles.scroll]}
-              contentContainerStyle={home_styles.container}
+        <ScrollView style={[styles.scroll]}
+              contentContainerStyle={styles.scroll_container}
               scrollEventThrottle={16}
               onScroll={Animated.event(
                 [{nativeEvent: {contentOffset: {y: this.state.scroll_y}}}]
               )}>
-          <View style={{width: '80%', height: 150, backgroundColor: 'white'}}>
+          <View style={{width: '80%', height: 170, backgroundColor: 'white'}}>
           </View>
           {gen_items(this, this.props.app_state)}
         </ScrollView>
         <Animated.View style={[home_styles.ani_view,
                 {opacity: view_opacity, top: view_top}]}>
-          <View style={home_styles.banner}>
+          <View style={styles.banner}>
             <Image source={require("../img/open.png")}
                   style={{width: '30%', height: 80}}
                   resizeMode='contain'/>
             <Text style={[styles.h5, {color: 'white'}]}>
               Welcome to our Store
+            </Text>
+            <Text style={[styles.h6, styles.red_text]}>
+              { (this.props.app_state.user !== null)
+                ? this.props.app_state.user.email
+                : ''
+              }
             </Text>
           </View>
         </Animated.View>
@@ -69,19 +75,6 @@ export default class Home extends Component<{}> {
 
 
 const home_styles = StyleSheet.create({
-  container: {
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  scroll: {
-    flex: 1,
-  },
-  banner: {
-    width: '100%',
-    alignItems: 'center',
-    paddingVertical: 15,
-    backgroundColor: '#202020',
-  },
   ani_view: {
     position: 'absolute',
     left: 0,

@@ -13,6 +13,7 @@ import TextInputState from 'react-native/lib/TextInputState'
 
 import styles from './Styles';
 
+// TODO: check mark on password should log in
 
 export default class Login extends Component<{}> {
   constructor(props){
@@ -36,7 +37,7 @@ export default class Login extends Component<{}> {
 
   render() {
     return (
-      <View style={[styles.container, {backgroundColor: '#eff8f3'}]}>
+      <View style={[styles.container, {backgroundColor: '#f8f8f8'}]}>
         <Image source={require("../img/open.png")}
                 style={{width: '30%', height: '30%'}}
                 resizeMode='contain'/>

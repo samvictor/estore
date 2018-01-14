@@ -9,10 +9,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 10,
   },
+  h4: {
+    fontSize: 30,
+    textAlign: 'center',
+    margin: 5,
+  },
   h5: {
     fontSize: 20,
     textAlign: 'center',
     margin: 5,
+  },
+  h6: {
+    fontSize: 18,
+    textAlign: 'center',
+    margin: 3,
   },
   white_text: {
     color: '#ffffff',
@@ -20,6 +30,28 @@ const styles = StyleSheet.create({
   text: {
     color: '#333333',
     margin: 5,
+  },
+  red_text: {
+    color: '#d61010'
+  },
+  banner: {
+    width: '100%',
+    alignItems: 'center',
+    paddingVertical: 15,
+    backgroundColor: '#202020',
+  },
+  fixed_top: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+  },
+  scroll: {
+    flex: 1,
+  },
+  scroll_container: {
+    justifyContent: 'flex-start',
+    alignItems: 'center',
   },
 
   container: {
@@ -83,7 +115,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
+  banner: {
+    width: '100%',
+    alignItems: 'center',
+    paddingVertical: 15,
+    backgroundColor: '#202020',
+  },
 });
 
 export default styles;

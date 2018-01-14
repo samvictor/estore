@@ -92,13 +92,22 @@ export default class App extends Component<{}> {
   }
 
   render() {
-    let tabs = [
-      {'path': 'admin', 'name': 'Admin/History'},
+    let tab_1 = [];
+    if (this.state.user !== null){
+      if (this.state.user_is_admin === 'true')
+        tab_1 = [{'path': 'admin', 'name': 'Admin'}];
+      else
+        tab_1 = [{'path': 'history', 'name': 'History'}];
+    }
+
+    let tabs = tab_1.concat([
       {'path': 'search', 'name': 'Search'},
-      {'path': 'home', 'name': 'Home'},
-      {'path': 'cart', 'name': 'Cart'},
-      {'path': 'settings', 'name': 'Settings'},
-    ];
+      {'path': 'home', 'name': 'Home'}
+    ]);
+    if(this.state.user !== null)
+      tabs.push({'path': 'cart', 'name': 'Cart'});
+
+    tabs.push({'path': 'settings', 'name': 'Settings'});
 
     return (
       <SamNav path={this.state.path} tabs={tabs}
@@ -137,6 +146,11 @@ export default class App extends Component<{}> {
         </SamPath>
 
         <SamPath path='first_time' show_tabs='false'>
+          <Login app_state={this.state}
+                  set_app_state={this.set_app_state.bind(this)}/>
+        </SamPath>
+
+        <SamPath path='login'>
           <Login app_state={this.state}
                   set_app_state={this.set_app_state.bind(this)}/>
         </SamPath>

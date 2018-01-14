@@ -7,10 +7,12 @@ import {
   Image,
   TextInput,
   Button,
+  ScrollView,
 } from 'react-native';
 import TextInputState from 'react-native/lib/TextInputState'
 
 import styles from './Styles';
+import gen_items from './ShowItems';
 
 
 export default class Cart extends Component<{}> {
@@ -23,14 +25,51 @@ export default class Cart extends Component<{}> {
   }
 
   render() {
+    let price = 0;
+
+    let cart = this.props.app_state.user_cart;
+    let this_item;
+    let render_items = null;
+
+    if(cart.length === 0){
+      if(this.props.app_state.user_cart_loaded)
+        render_items = <Text style={styles.h5}>Cart is Empty</Text>;
+      else
+        render_items = <Text style={styles.h5}>Loading...</Text>;
+    }
+    else {
+      render_items = gen_items(this, this.props.app_state);
+    }
+
+    let all_items = this.props.app_state.items_dict;
+    for(var i = 0; i < cart.length; i++) {
+      this_item = all_items[cart[i]];
+      price += parseFloat(this_item.price);
+    }
+
     return (
-      <View style={[styles.container, {backgroundColor: 'white'}]}>
-        <Text style={[styles.h3]}>
-          Cart
-        </Text>
-        <Image source={require("../img/open.png")}
-                style={{width: '30%', height: '30%'}}
-                resizeMode='contain'/>
+      <View style={[{flex: 1, width: '100%'}]}>
+        <ScrollView style={[styles.scroll]}
+              contentContainerStyle={styles.scroll_container}>
+          <View style={{width: '100%', height:110, backgroundColor: 'white'}}>
+          </View>
+          <View style={{width: '90%', margin: 10}}>
+            <Button title={'$' + price.toFixed(2)+'  |  Checkout'}
+                    style={{'width': '100%'}}/>
+          </View>
+          {render_items}
+        </ScrollView>
+        <View style={[styles.fixed_top, styles.banner]}>
+          <Text style={[styles.h4, {color: 'white'}]}>
+            Cart
+          </Text>
+          <Text style={[styles.h6, styles.red_text]}>
+            { (this.props.app_state.user !== null)
+              ? this.props.app_state.user.email
+              : ''
+            }
+          </Text>
+        </View>
       </View>
     );
   }
