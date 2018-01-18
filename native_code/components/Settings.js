@@ -32,7 +32,7 @@ export default class Settings extends Component<{}> {
           this.props.set_app_state({'path': 'login'});
         }}
       />
-      : <Button
+      : [<Button
         title='Logout'
         color='#C62828'
         containerViewStyle={{width: '100%'}}
@@ -43,7 +43,9 @@ export default class Settings extends Component<{}> {
             'snack_duration': 3000
           });
         }}
-      />;
+      />,
+      <Text>New Item Notif switch</Text>];
+
 
     return (
       <View style={[styles.container, {backgroundColor: 'white'}]}>
@@ -58,8 +60,17 @@ export default class Settings extends Component<{}> {
             }
           </Text>
         </View>
-        <View style={{width: '80%'}}>
+        <View style={{width: '80%', justifyContent: 'space-around'}}>
           {log_btn}
+          <Button
+            title='About'
+            color='#888'
+            containerViewStyle={{width: '100%'}}
+            onPress={()=>{}}
+          />
+          <Text style={{color: '#888', fontSize: 10, textAlign: 'center'}}>
+            version 0.3
+          </Text>
         </View>
       </View>
     );
