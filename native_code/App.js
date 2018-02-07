@@ -1,7 +1,7 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- * @flow
+/*
+   Written by Sam Inniss
+   SamInniss.com
+   License: MIT
  */
 
 import React, { Component } from 'react';
@@ -25,6 +25,7 @@ import History from './components/History';
 import Search from './components/Search';
 import Cart from './components/Cart';
 import Settings from './components/Settings';
+import Checkout from './components/Checkout';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -137,6 +138,11 @@ export default class App extends Component<{}> {
 
         <SamPath path='cart'>
           <Cart app_state={this.state}
+                  set_app_state={this.set_app_state.bind(this)}/>
+        </SamPath>
+
+        <SamPath path='checkout'>
+          <Checkout app_state={this.state}
                   set_app_state={this.set_app_state.bind(this)}/>
         </SamPath>
 

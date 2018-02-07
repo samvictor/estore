@@ -24,32 +24,35 @@ export default class Settings extends Component<{}> {
 
   render() {
     let log_btn = (this.props.app_state.user === null)
-      ? <Button
-        title='Login'
-        color='#339966'
-        containerViewStyle={{width: '100%'}}
-        onPress={(event) => {
-          this.props.set_app_state({'path': 'login'});
-        }}
-      />
-      : [<Button
-        title='Logout'
-        color='#C62828'
-        containerViewStyle={{width: '100%'}}
-        onPress={(event) => {
-          this.props.app_state.firebase.auth().signOut();
-          this.props.set_app_state({
-            'snack_msg': 'You are logged out',
-            'snack_duration': 3000
-          });
-        }}
-      />,
-      <Text>New Item Notif switch</Text>];
-
+      ? <View style={settings_styles.btn_space}>
+          <Button
+          title='Login'
+          color='#339966'
+          containerViewStyle={{width: '100%'}}
+          onPress={(event) => {
+            this.props.set_app_state({'path': 'login'});
+          }}
+        />
+      </View>
+      : [<View style={settings_styles.btn_space}>
+          <Button
+          title='Logout'
+          color='#C62828'
+          containerViewStyle={{width: '100%'}}
+          onPress={(event) => {
+            this.props.app_state.firebase.auth().signOut();
+            this.props.set_app_state({
+              'snack_msg': 'You are logged out',
+              'snack_duration': 3000
+            });
+          }}
+        />
+      </View>,
+      <Text style={settings_styles.btn_space}>New Item Notifications Coming Soon</Text>];
 
     return (
       <View style={[styles.container, {backgroundColor: 'white'}]}>
-        <View style={[styles.fixed_top, styles.banner]}>
+        <View style={[styles.banner]}>
           <Text style={[styles.h4, {color: 'white'}]}>
             Settings
           </Text>
@@ -60,19 +63,31 @@ export default class Settings extends Component<{}> {
             }
           </Text>
         </View>
-        <View style={{width: '80%', justifyContent: 'space-around'}}>
+        <View style={{width: '80%', justifyContent: 'center'}}>
+          <View style={{height: 20}} />
           {log_btn}
-          <Button
-            title='About'
-            color='#888'
-            containerViewStyle={{width: '100%'}}
-            onPress={()=>{}}
-          />
-          <Text style={{color: '#888', fontSize: 10, textAlign: 'center'}}>
-            version 0.3
+          <View style={settings_styles.btn_space}>
+            <Button
+              title='About'
+              color='#888'
+              containerViewStyle={{width: '100%'}}
+              onPress={()=>{}}
+            />
+          </View>
+          <Text style={[{color: '#888', fontSize: 10, textAlign: 'center'},
+                          settings_styles.btn_space]}>
+            version 0.6
           </Text>
         </View>
+        <View style={{flex: 1}} />
       </View>
     );
   }
 }
+
+
+const settings_styles = StyleSheet.create({
+  btn_space: {
+    marginVertical: 10,
+  }
+});

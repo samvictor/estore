@@ -51,11 +51,15 @@ export default class Cart extends Component<{}> {
       <View style={[{flex: 1, width: '100%'}]}>
         <ScrollView style={[styles.scroll]}
               contentContainerStyle={styles.scroll_container}>
+
           <View style={{width: '100%', height:110, backgroundColor: 'white'}}>
           </View>
           <View style={{width: '90%', margin: 10}}>
             <Button title={'$' + price.toFixed(2)+'  |  Checkout'}
-                    style={{'width': '100%'}}/>
+                    style={{'width': '100%'}}
+                    onPress={()=>{
+                        this.props.set_app_state({'path': 'checkout'});
+                    }}/>
           </View>
           {render_items}
         </ScrollView>

@@ -89,7 +89,7 @@ export default class SamSnack extends Component<{}> {
         },
         styles.sam_snack]}
       >
-        <Text style={{'color': 'white'}}>
+        <Text style={{'color': 'white', 'textAlign': 'center'}}>
           {this.state.msg}
         </Text>
       </Animated.View>

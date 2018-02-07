@@ -126,7 +126,7 @@ export default class SamNav extends Component<{}> {
                     set_app_state={this.props.set_app_state}/>
         </View>
         {(show_tabs === 'true')
-          ?[<View style={{backgroundColor: 'grey', height: 1/PixelRatio.get(),
+          ?[<View style={{backgroundColor: '#202020', height: 1/PixelRatio.get(),
                             width: '100%'}}>
             </View>,
             <View
