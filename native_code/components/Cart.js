@@ -14,6 +14,8 @@ import TextInputState from 'react-native/lib/TextInputState'
 import styles from './Styles';
 import gen_items from './ShowItems';
 
+import Braintree from './BraintreeNativeModule';
+
 
 export default class Cart extends Component<{}> {
   constructor(props){
@@ -21,8 +23,25 @@ export default class Cart extends Component<{}> {
 
     this.state = {
       'log': 'ver 1',
+      'msg_listener': null,
     };
   }
+
+  componentWillMount() {
+    let msg_listener = Braintree.emitter.addListener('NATIVE_MESSAGE', ({message}) =>
+      this.props.set_app_state({'snack_msg': message,
+                                'snack_duration': 4000}),
+    );
+
+    this.setState({'msg_listener': msg_listener});
+  }
+
+  
+  accept_press = () => {
+    Braintree.accept_payment();
+    this.props.set_app_state({'snack_msg': 'sending to lib',
+                              'snack_duration': 4000})
+  };
 
   render() {
     let price = 0;
@@ -57,9 +76,7 @@ export default class Cart extends Component<{}> {
           <View style={{width: '90%', margin: 10}}>
             <Button title={'$' + price.toFixed(2)+'  |  Checkout'}
                     style={{'width': '100%'}}
-                    onPress={()=>{
-                        this.props.set_app_state({'path': 'checkout'});
-                    }}/>
+                    onPress={this.accept_press} />
           </View>
           {render_items}
         </ScrollView>
@@ -76,5 +93,9 @@ export default class Cart extends Component<{}> {
         </View>
       </View>
     );
+  }
+
+  componentWillUnmount(){
+    this.state.msg_listener.remove();
   }
 }

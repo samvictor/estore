@@ -1,6 +1,6 @@
 {
   "name": "eStore",
-  "version": "0.0.1",
+  "version": "0.0.7",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
@@ -11,7 +11,8 @@
   "dependencies": {
     "firebase": "^4.7.0",
     "react": "16.0.0",
-    "react-native": "0.51.0",
+    "react-native": "0.53.0",
+    "react-native-create-bridge": "^2.0.1",
     "react-native-snackbar-dialog": "^1.4.0"
   },
   "devDependencies": {
