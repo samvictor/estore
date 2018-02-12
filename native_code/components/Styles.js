@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   red_text: {
-    color: '#d61010'
+    color: '#ff2f24'
   },
   banner: {
     width: '100%',

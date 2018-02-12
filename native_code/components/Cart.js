@@ -28,19 +28,21 @@ export default class Cart extends Component<{}> {
   }
 
   componentWillMount() {
-    let msg_listener = Braintree.emitter.addListener('NATIVE_MESSAGE', ({message}) =>
-      this.props.set_app_state({'snack_msg': message,
-                                'snack_duration': 4000}),
+    let msg_listener = Braintree.emitter.addListener(
+      'NATIVE_MESSAGE',
+      ({message}) => {
+        this.props.set_app_state({'snack_msg': message,
+                                'snack_duration': 4000});
+        this.setState({'log': message});
+      }
     );
 
     this.setState({'msg_listener': msg_listener});
   }
 
-  
-  accept_press = () => {
+
+  accept_press () {
     Braintree.accept_payment();
-    this.props.set_app_state({'snack_msg': 'sending to lib',
-                              'snack_duration': 4000})
   };
 
   render() {
@@ -78,6 +80,7 @@ export default class Cart extends Component<{}> {
                     style={{'width': '100%'}}
                     onPress={this.accept_press} />
           </View>
+          <Text>{this.state.log}</Text>
           {render_items}
         </ScrollView>
         <View style={[styles.fixed_top, styles.banner]}>
