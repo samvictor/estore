@@ -127,7 +127,6 @@ class Cart extends Component {
   handle_submit(dropinInstance){
     var user_cart = this.props.user_cart;
     var user = this.props.user;
-    var sub_price = this.state.price;
 
     if (user_cart.length === 0){
       $('#alert_danger').text('Cart is empty')
@@ -137,7 +136,7 @@ class Cart extends Component {
     dropinInstance.requestPaymentMethod().then(function (payload) {
       $.post('https://us-central1-estore-7e485.cloudfunctions.net/checkout',
         {'uid': user.uid, 'email': user.email,
-                'nonce': payload.nonce, 'price': sub_price})
+                'nonce': payload.nonce})
         .done(function(checkout_data){
           console.log('checkout data', checkout_data);
         });
