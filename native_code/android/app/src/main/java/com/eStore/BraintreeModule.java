@@ -3,10 +3,16 @@
 package com.estore.braintree;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 
+import com.braintreepayments.api.dropin.DropInActivity;
 import com.braintreepayments.api.dropin.DropInRequest;
+import com.braintreepayments.api.dropin.DropInResult;
+import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.BaseActivityEventListener;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
@@ -18,7 +24,44 @@ import java.util.Map;
 
 public class BraintreeModule extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "Braintree";
+
+    private static final String E_ACTIVITY_DOES_NOT_EXIST = "activity_does_not_exist";
+    private static final String E_BRAINTREE_FAILED = "braintree_failed";
+    private static final String E_USER_CANCELED = "user_canceled";
+    private static final int BRAIN_REQUEST = 28935;
+
     private static ReactApplicationContext reactContext = null;
+    private Promise mBrainPromise;
+
+    private final ActivityEventListener mActivityEventListener = new BaseActivityEventListener() {
+        @Override
+        public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
+            //final WritableMap event = Arguments.createMap();
+
+            if (requestCode == BRAIN_REQUEST) {
+                if (mBrainPromise != null) {
+                    if (resultCode == Activity.RESULT_OK) {
+                        DropInResult result = data.getParcelableExtra(DropInResult.EXTRA_DROP_IN_RESULT);
+                        // use the result to update your UI and send the payment method nonce to your server
+                        String paymentMethodNonce = result.getPaymentMethodNonce().getNonce();
+                        mBrainPromise.resolve(paymentMethodNonce);
+                    } else if (resultCode == Activity.RESULT_CANCELED) {
+                        // the user canceled
+                        mBrainPromise.reject(E_USER_CANCELED, "User canceled");
+                    } else {
+                        // handle errors here, an exception may be available in
+                        Exception error = (Exception) data.getSerializableExtra(DropInActivity.EXTRA_ERROR);
+                        mBrainPromise.reject(error.getMessage(), "on activity result code: " + Integer.toString(resultCode));
+                    }
+                }
+            }
+            else {
+                //event.putString("message", "Wrong request code?");
+            }
+
+            //emitDeviceEvent("NATIVE_MESSAGE", event);
+        }
+    };
 
     public BraintreeModule(ReactApplicationContext context) {
         // Pass in the context to the constructor and save it so you can emit events
@@ -26,6 +69,7 @@ public class BraintreeModule extends ReactContextBaseJavaModule {
         super(context);
 
         reactContext = context;
+        reactContext.addActivityEventListener(mActivityEventListener);
     }
 
     @Override
@@ -53,16 +97,24 @@ public class BraintreeModule extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public void accept_payment (String token) {
-        final WritableMap event = Arguments.createMap();
-        event.putString("message", "Accepting Payment");
-        emitDeviceEvent("NATIVE_MESSAGE", event);
+    public void accept_payment (String token, Promise promise) {
+        mBrainPromise = promise;
 
-
-        DropInRequest dropInRequest = new DropInRequest()
-                .clientToken(token);
         Activity curr_activity = reactContext.getCurrentActivity();
-        curr_activity.startActivityForResult(dropInRequest.getIntent(reactContext), 1);
+        if (curr_activity == null) {
+            promise.reject(E_ACTIVITY_DOES_NOT_EXIST, "Activity doesn't exist");
+            return;
+        }
+
+        try {
+            DropInRequest dropInRequest = new DropInRequest()
+                    .clientToken(token);
+
+            curr_activity.startActivityForResult(dropInRequest.getIntent(reactContext), BRAIN_REQUEST);
+        }
+        catch(Exception e){
+            promise.reject(E_BRAINTREE_FAILED, "Could not start braintree");
+        }
     }
 
     private static void emitDeviceEvent(String eventName, @Nullable WritableMap eventData) {
