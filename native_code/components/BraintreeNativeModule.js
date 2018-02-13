@@ -12,13 +12,7 @@ export default {
 
   accept_payment() {
     return fetch(
-        'https://us-central1-estore-7e485.cloudfunctions.net/client_token_mobile',
-        {
-          'method': 'POST',
-          'body': JSON.stringify({
-            ***REMOVED***
-          })
-        }
+        'https://us-central1-estore-7e485.cloudfunctions.net/client_token_mobile'
       ).then((response) => {
         return response.text();
       })
