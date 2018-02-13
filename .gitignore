@@ -25,4 +25,4 @@ yarn-error.log*
 *.keystore
 */BraintreeNativeModule.js
 */gradle.properties
-*/replacements.txt
+replacements.txt
