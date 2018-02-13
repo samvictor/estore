@@ -25,4 +25,4 @@ export default {
 
   EXAMPLE_CONSTANT: Braintree.EXAMPLE_CONSTANT
 }
-asdf
+asd
