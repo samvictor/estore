@@ -42,6 +42,8 @@ export default class Cart extends Component<{}> {
 
 
   accept_press () {
+    this.props.set_app_state({'snack_msg':'Working...',
+                            'snack_duration': 4000});
     Braintree.accept_payment();
   };
 
@@ -78,9 +80,8 @@ export default class Cart extends Component<{}> {
           <View style={{width: '90%', margin: 10}}>
             <Button title={'$' + price.toFixed(2)+'  |  Checkout'}
                     style={{'width': '100%'}}
-                    onPress={this.accept_press} />
+                    onPress={this.accept_press.bind(this)} />
           </View>
-          <Text>{this.state.log}</Text>
           {render_items}
         </ScrollView>
         <View style={[styles.fixed_top, styles.banner]}>

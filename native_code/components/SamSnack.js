@@ -22,13 +22,19 @@ export default class SamSnack extends Component<{}> {
 
   componentWillReceiveProps(next_props){
     let for_state = {};
+    let snack_msg
+    let snack_duration
+
+    snack_msg = next_props.app_state.snack_msg;
+    snack_duration = next_props.app_state.snack_duration;
+    
     // new message?
-    if(next_props.app_state.snack_msg !== this.state.msg
-          && next_props.app_state.snack_msg !== ''){
+    if(snack_msg !== this.state.msg
+          && snack_msg !== ''){
       for_state = {
         'showing': true,
-        'msg': next_props.app_state.snack_msg,
-        'duration': next_props.app_state.snack_duration,
+        'msg': snack_msg,
+        'duration': snack_duration,
         'stack_counter': this.state.stack_counter + 1,
       };
 
