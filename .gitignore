@@ -23,6 +23,6 @@ yarn-error.log*
 
 # sam
 *.keystore
-/native_code/components/BraintreeNativeModule.js
-/native_code/android/gradle.properties
+native_code/components/BraintreeNativeModule.js
+native_code/android/gradle.properties
 replacements2.txt
