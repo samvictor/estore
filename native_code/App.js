@@ -65,6 +65,8 @@ export default class App extends Component<{}> {
       'no_user': null,
       'user_cart': [],
       'user_cart_loaded': false,
+      'past_orders_dict': {},
+      'past_orders': [],
       'db': database,
       'storage': storage,
       'firebase': firebase,
@@ -95,19 +97,25 @@ export default class App extends Component<{}> {
     let tab_1 = [];
     if (this.state.user !== null){
       if (this.state.user_is_admin === 'true')
-        tab_1 = [{'path': 'admin', 'name': 'Admin'}];
+        tab_1 = [{'path': 'admin',
+                  'name': 'Admin',
+                  'color_paths': ['admin', 'history']}];
       else
-        tab_1 = [{'path': 'history', 'name': 'History'}];
+        tab_1 = [{'path': 'history',
+                  'name': 'History',
+                  'color_paths': ['history']}];
     }
 
     let tabs = tab_1.concat([
-      {'path': 'search', 'name': 'Search'},
-      {'path': 'home', 'name': 'Home'}
+      {'path': 'search', 'name': 'Search', 'color_paths': ['search']},
+      {'path': 'home', 'name': 'Home', 'color_paths': ['home']}
     ]);
     if(this.state.user !== null)
-      tabs.push({'path': 'cart', 'name': 'Cart'});
+      tabs.push({'path': 'cart', 'name': 'Cart', 'color_paths': ['cart']});
 
-    tabs.push({'path': 'settings', 'name': 'Settings'});
+    tabs.push({'path': 'settings',
+                  'name': 'Settings',
+                  'color_paths': ['settings', 'login']});
 
     return (
       <SamNav path={this.state.path} tabs={tabs}
@@ -229,13 +237,34 @@ export default class App extends Component<{}> {
             for_state['user_cart_loaded'] = true;
             for_state['no_user'] = 'false';
 
+            for_state['past_orders'] = [];
+            for_state['past_orders_dict'] = {};
+            if (user_data['past_orders'] !== undefined) {
+              for_state['past_orders_dict'] = user_data['past_orders'];
+
+              for (var oid in user_data['past_orders']) {
+                for_state['past_orders'].push(user_data['past_orders'][oid]);
+              }
+              for_state['past_orders'].sort(function (b, a) {
+                if (a.time < b.time)
+                  return -1;
+
+                if (a.time > b.time)
+                  return 1;
+
+                return 0;
+              });
+            }
+
             this.setState(for_state);
           });
         } else {
           // No user is signed in.
           this.setState({'user': null, 'user_is_admin': 'false',
                   'user_cart': [], 'user_cart_loaded': true,
-                  'no_user': 'true', 'user_loaded': true});
+                  'no_user': 'true', 'user_loaded': true,
+                  'past_orders_dict': {}, 'past_orders': [],
+                });
         }
       });
   }

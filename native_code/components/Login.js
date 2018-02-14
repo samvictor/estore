@@ -15,7 +15,8 @@ import TextInputState from 'react-native/lib/TextInputState'
 import styles from './Styles';
 
 // TODO: check mark on password should log in
-// TODO: use fingerprint to save logins
+// TODO: if password there, tab on email should log in
+
 
 export default class Login extends Component<{}> {
   constructor(props){

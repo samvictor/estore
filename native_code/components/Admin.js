@@ -7,6 +7,8 @@ import {
   Image,
   TextInput,
   Button,
+  TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import TextInputState from 'react-native/lib/TextInputState'
 
@@ -24,13 +26,37 @@ export default class Admin extends Component<{}> {
 
   render() {
     return (
-      <View style={[styles.container, {backgroundColor: 'white'}]}>
-        <Text style={[styles.h3]}>
-          Admin
-        </Text>
-        <Image source={require("../img/open.png")}
-                style={{width: '30%', height: '30%'}}
-                resizeMode='contain'/>
+      <View style={[{flex: 1, width: '100%'}]}>
+        <ScrollView style={[styles.scroll]}
+              contentContainerStyle={styles.scroll_container}>
+
+          <View style={{width: '100%', height:110, backgroundColor: 'white'}}>
+          </View>
+          <Text>Admin Page</Text>
+        </ScrollView>
+        <View style={[styles.fixed_top, styles.banner]}>
+          <Text style={[styles.h4, {color: 'white'}]}>
+            Admin
+          </Text>
+          <Text style={[styles.h6, styles.red_text]}>
+            { (this.props.app_state.user !== null)
+              ? this.props.app_state.user.email
+              : ''
+            }
+          </Text>
+        </View>
+        <TouchableOpacity
+          style={{
+            right: 20,
+            top: 20,
+            position: 'absolute'
+          }}
+          onPress={()=>{
+            this.props.set_app_state({'path': 'history'});
+          }}
+        >
+          <Text style={{color: 'white'}}>History</Text>
+        </TouchableOpacity>
       </View>
     );
   }

@@ -3,7 +3,7 @@ import {
   Text,
   View,
   TouchableOpacity,
-  PixelRatio
+  PixelRatio,
 } from 'react-native';
 
 import styles from './Styles';
@@ -79,7 +79,7 @@ export default class SamNav extends Component<{}> {
 
     for (var i = 0; i < nextProps.tabs.length; i++){
       this_tab = nextProps.tabs[i];
-      if(this_tab.path === nextProps.path)
+      if(this_tab.color_paths.includes(nextProps.path))
         bar_color = '#d61010';
       else
         bar_color = 'white';
@@ -91,7 +91,7 @@ export default class SamNav extends Component<{}> {
         <View style={{width: '100%', height: 2, backgroundColor: bar_color}}></View>
         <Text style={[
               text_style,
-              (this_tab.path === nextProps.path)? active_style :'',
+              (this_tab.color_paths.includes(nextProps.path))? active_style :'',
             ]}>
           {this_tab.name}
         </Text>
