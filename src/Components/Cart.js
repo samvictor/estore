@@ -134,7 +134,7 @@ class Cart extends Component {
       return;
     }
     dropinInstance.requestPaymentMethod().then(function (payload) {
-      $.post('https://us-central1-estore-7e485.cloudfunctions.net/checkout',
+      $.post('https://us-central1-estore-7e485.cloudfunctions.net/checkout/',
         {'uid': user.uid, 'email': user.email,
                 'nonce': payload.nonce})
         .done(function(checkout_data){
@@ -158,7 +158,7 @@ class Cart extends Component {
     var submitButton = document.querySelector('#submit-button');
     var temp_this = this;
 
-    $.get('https://us-central1-estore-7e485.cloudfunctions.net/client_token',
+    $.get('https://us-central1-estore-7e485.cloudfunctions.net/client_token/',
       function(data){
         braintree.dropin.create({
           authorization: data,
