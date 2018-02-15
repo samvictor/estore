@@ -71,12 +71,14 @@ export default class Settings extends Component<{}> {
               title='About'
               color='#888'
               containerViewStyle={{width: '100%'}}
-              onPress={()=>{}}
+              onPress={(event) => {
+                this.props.set_app_state({'path': 'about'});
+              }}
             />
           </View>
           <Text style={[{color: '#888', fontSize: 10, textAlign: 'center'},
                           settings_styles.btn_space]}>
-            version 0.6
+            version 0.10
           </Text>
         </View>
         <View style={{flex: 1}} />

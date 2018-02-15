@@ -111,18 +111,20 @@ export default class Login extends Component<{}> {
               }}
             />
           </View>
-          <View style={{width: '80%'}}>
-            <Button
-              title='Skip'
-              color='#C62828'
-              containerViewStyle={{width: '100%'}}
-              onPress={(event) => {
-                AsyncStorage.setItem('first_time', 'false');
-                this.props.set_app_state({'first_time': 'false',
-                                            'path': 'home'});
-              }}
-            />
-          </View>
+          {(this.props.app_state.first_time === 'true')
+            ? <View style={{width: '80%'}}>
+                <Button
+                  title='Skip'
+                  color='#C62828'
+                  containerViewStyle={{width: '100%'}}
+                  onPress={(event) => {
+                    AsyncStorage.setItem('first_time', 'false');
+                    this.props.set_app_state({'first_time': 'false',
+                                                'path': 'home'});
+                  }}
+                />
+              </View>
+            : null}
           <View style={{width: '100%', height:210, backgroundColor: 'white'}}>
           </View>
         </ScrollView>

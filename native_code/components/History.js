@@ -41,7 +41,7 @@ export default class History extends Component<{}> {
         o_item_list.push(<Text>, </Text>);
       }
       o_item_list.pop();
-      
+
       Moment.locale('en');
       let o_time = Moment(this_order.time);
 
@@ -53,7 +53,7 @@ export default class History extends Component<{}> {
           width: '100%',
         }}></View>,
         <Text style={[styles.h5]}>{
-          o_time.format('ddd, MMM Do YYYY, hh:mm a')
+          o_time.format('ddd, MMM Do YYYY [at] hh:mm A')
         }</Text>,
         <Text>{o_item_list}</Text>,
         <Text style={[styles.h5]}>${this_order.total_price}</Text>,
