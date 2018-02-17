@@ -26,13 +26,22 @@ export default class Settings extends Component<{}> {
     let log_btn = (this.props.app_state.user === null)
       ? <View style={settings_styles.btn_space}>
           <Button
-          title='Login'
-          color='#339966'
-          containerViewStyle={{width: '100%'}}
-          onPress={(event) => {
-            this.props.set_app_state({'path': 'login'});
-          }}
-        />
+            title='Login'
+            color='#339966'
+            containerViewStyle={{width: '100%'}}
+            onPress={(event) => {
+              this.props.set_app_state({'path': 'login'});
+            }}
+          />
+          <View style={{height: 20}}></View>
+          <Button
+            title='Signup'
+            color='#606060'
+            containerViewStyle={{width: '100%'}}
+            onPress={(event) => {
+              this.props.set_app_state({'path': 'signup'});
+            }}
+          />
       </View>
       : [<View style={settings_styles.btn_space}>
           <Button

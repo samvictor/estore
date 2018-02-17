@@ -8,14 +8,15 @@ import {
   Image,
   TextInput,
   Button,
-  findNodeHandle
+  findNodeHandle,
 } from 'react-native';
-import TextInputState from 'react-native/lib/TextInputState'
+import TextInputState from 'react-native/lib/TextInputState';
 
 import styles from './Styles';
 
 // TODO: check mark on password should log in
 // TODO: if password there, tab on email should log in
+//TODO: switching fields closes keyboard
 
 
 export default class Login extends Component<{}> {
@@ -35,6 +36,29 @@ export default class Login extends Component<{}> {
     } catch(e) {
       //this.setState({'log': 'Couldnt focus text input: '+ e.message});
     }
+  }
+
+  login_submit () {
+    this.props.set_app_state({'snack_msg': 'Working...',
+                              'snack_duration': 4000});
+
+    this.props.app_state.firebase.auth()
+            .signInWithEmailAndPassword(this.state.email,
+                                        this.state.password)
+            .then(
+      function () {
+        AsyncStorage.setItem('first_time', 'false');
+        this.props.set_app_state({'first_time': 'false',
+                                  'path': 'home',
+                                  'snack_msg': 'You are logged in',
+                                  'snack_duration': 3000});
+
+      }.bind(this)
+      ,function(error) {
+        this.props.set_app_state({'snack_msg': error.message,
+                                  'snack_duration': 7000});
+      }.bind(this));
+
   }
 
 
@@ -69,6 +93,7 @@ export default class Login extends Component<{}> {
             secureTextEntry={true}
             onChangeText={(text) => this.setState({'password': text})}
             style={[{width: '80%'}]}
+            onSubmitEditing={this.login_submit.bind(this)}
           />
 
           <View style={{width: '80%', 'marginTop': 10, 'marginBottom': 20}}>
@@ -77,25 +102,7 @@ export default class Login extends Component<{}> {
               accessibilityLabel='Tap here to log in'
               color='#339966'
               containerViewStyle={{width: '100%'}}
-              onPress={(event) => {
-                this.props.app_state.firebase.auth()
-                        .signInWithEmailAndPassword(this.state.email,
-                                                    this.state.password)
-                        .then(
-                  function () {
-                    AsyncStorage.setItem('first_time', 'false');
-                    this.props.set_app_state({'first_time': 'false',
-                                              'path': 'home',
-                                              'snack_msg': 'You are logged in',
-                                              'snack_duration': 3000});
-
-                  }.bind(this)
-                  ,function(error) {
-                    this.props.set_app_state({'snack_msg': error.message,
-                                              'snack_duration': 7000});
-                  }.bind(this));
-
-              }}
+              onPress={this.login_submit.bind(this)}
             />
           </View>
           <View style={{width: '80%', 'marginBottom': 20}}>
@@ -105,8 +112,7 @@ export default class Login extends Component<{}> {
               containerViewStyle={{width: '100%'}}
               onPress={(event) => {
                 this.props.set_app_state({
-                  'snack_msg': 'This section is still under construction',
-                  'snack_duration': 3000
+                  'path': 'signup'
                 });
               }}
             />

@@ -26,6 +26,7 @@ import Search from './components/Search';
 import Cart from './components/Cart';
 import Settings from './components/Settings';
 import About from './components/About';
+import Signup from './components/Signup';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' +
@@ -76,6 +77,7 @@ export default class App extends Component<{}> {
       'found_items': [],
       'snack_msg': '',
       'snack_duration': 0,
+      'snack_id': 0,
     };
 
     AsyncStorage.getItem('first_time')
@@ -116,7 +118,7 @@ export default class App extends Component<{}> {
 
     tabs.push({'path': 'settings',
                   'name': 'Settings',
-                  'color_paths': ['settings', 'login', 'about']});
+                  'color_paths': ['settings', 'login', 'about', 'signup']});
 
     return (
       <SamNav path={this.state.path} tabs={tabs}
@@ -166,6 +168,11 @@ export default class App extends Component<{}> {
 
         <SamPath path='about'>
           <About app_state={this.state}
+                  set_app_state={this.set_app_state.bind(this)}/>
+        </SamPath>
+
+        <SamPath path='signup'>
+          <Signup app_state={this.state}
                   set_app_state={this.set_app_state.bind(this)}/>
         </SamPath>
 
