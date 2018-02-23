@@ -294,6 +294,12 @@ button.chooseFileButton {
   padding: 10px 5% 50px 5%;
 }
 
+/* search */
+hr.search {
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+
 /* mobile */
 @media (max-width: 576px) {
   #forgot_div {

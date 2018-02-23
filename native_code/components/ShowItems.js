@@ -9,9 +9,11 @@ import {
   Animated,
   TextInput,
   Button,
+  TouchableOpacity,
 } from 'react-native';
 
 import styles from './Styles';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 // call when cart btn pressed
 function cart_btn(parent_this, item_id, in_cart, app_state) {
@@ -103,18 +105,25 @@ function gen_items(parent_this, app_state) {
     if (app_state.path === 'home') {
       if(app_state.user_cart.includes(this_item.id)){
         temp_btn =
-          <Button onPress={cart_btn.bind(this, parent_this,
+          <TouchableOpacity onPress={cart_btn.bind(this, parent_this,
                                           this_item.id, true, app_state)}
-                        title={'$'+this_item.price}
-                        color="green">
-          </Button>;
+                        style={[styles.button, {backgroundColor: 'green'}]}>
+            <Text style={{textAlign: 'center', color: 'white'}}>
+              {'$'+this_item.price + '  |  '}
+            </Text>
+            <Icon name='check' size={18} style={{marginTop: 2, color: 'white'}}/>
+          </TouchableOpacity>;
       }
       else {
         temp_btn =
-          <Button onPress={cart_btn.bind(this, parent_this,
+          <TouchableOpacity onPress={cart_btn.bind(this, parent_this,
                                           this_item.id, false, app_state)}
-                  title={'$'+this_item.price}>
-          </Button>;
+                        style={[styles.button, {backgroundColor: '#36f'}]}>
+            <Text style={{textAlign: 'center', color: 'white'}}>
+              {'$'+this_item.price + '  |  '}
+            </Text>
+            <Icon name='add-shopping-cart' size={18} style={{marginTop: 2, color: 'white'}}/>
+          </TouchableOpacity>;
 
       }
     }

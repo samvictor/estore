@@ -10,7 +10,8 @@ import {
   Platform,
   StyleSheet,
   Text,
-  View
+  View,
+  BackHandler,
 } from 'react-native';
 import firebase from 'firebase';
 
@@ -280,6 +281,17 @@ export default class App extends Component<{}> {
                 });
         }
       });
+
+
+      BackHandler.addEventListener('hardwareBackPress', function() {
+        if (this.state.path !== 'home') {
+          // if we're not home, don't exit app
+          //this.goBack();
+          return true;
+        }
+        return false;
+      }.bind(this));
+
   }
 
 }

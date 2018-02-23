@@ -122,6 +122,18 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     backgroundColor: '#202020',
   },
+
+  button: {
+    color: 'white',
+    padding: 5,
+    fontSize: 16,
+    borderRadius: 3,
+    borderWidth: 1/PixelRatio.get(),
+    borderColor: '#606060',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
 
 export default styles;

@@ -39,7 +39,11 @@ class ShowItems extends Component {
       }
       else
         for_ret = [<h3 className="loading_items">Loading...</h3>];
+
+      if(this.props.no_message)
+        for_ret = [];
     }
+
 
     for(var i = 0; i < items.length; i++) {
       this_item = items[i];
