@@ -102,6 +102,7 @@ export default class Signup extends Component<{}> {
     return (
       <View style={[{flex: 1, width: '100%'}]}>
         <ScrollView style={[styles.scroll]}
+              keyboardShouldPersistTaps={true}
               contentContainerStyle={styles.scroll_container}>
 
           <View style={{width: '100%', height:110}}></View>

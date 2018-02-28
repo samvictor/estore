@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import ShowItems from './ShowItems'
 import logo from '../open.png';
 
+//TODO: check url for search criteria, allow chrome tab search
+
 class Search extends Component {
   search_items (search_term, items) {
     // In perfect match, all words in search term must be somewhere in item name or desc.

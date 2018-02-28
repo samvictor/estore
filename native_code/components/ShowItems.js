@@ -69,12 +69,14 @@ function remove_btn(parent_this, item_id, in_cart, app_state) {
     });
 }
 
-function gen_items(parent_this, app_state) {
+function gen_items(parent_this, app_state, local_items) {
   let this_item = {};
   let items = [];
   if (app_state.path === 'home')
     items = app_state.items;
-  if (app_state.path === 'cart') {
+  else if (app_state.path === 'search')
+    items = local_items;
+  else if (app_state.path === 'cart') {
     let cart = app_state.user_cart;
     let all_items = app_state.items_dict;
     for (var j = 0; j < cart.length; j++){
@@ -90,9 +92,12 @@ function gen_items(parent_this, app_state) {
       for_ret = [<Text>
         No items available for purchase. Check back later.
       </Text>];
+      if(app_state.path === 'search')
+        for_ret = [];
     }
     else
       for_ret = [<Text className="loading_items">Loading...</Text>];
+
   }
 
   for(var i = 0; i < items.length; i++) {
@@ -102,7 +107,7 @@ function gen_items(parent_this, app_state) {
       short_description = short_description.substring(0, 260) + '...';
     let item_url = (this_item.imgs === undefined)? '': this_item.imgs[0].url;
     let temp_btn;
-    if (app_state.path === 'home') {
+    if (app_state.path === 'home' || app_state.path === 'search') {
       if(app_state.user_cart.includes(this_item.id)){
         temp_btn =
           <TouchableOpacity onPress={cart_btn.bind(this, parent_this,
@@ -118,7 +123,7 @@ function gen_items(parent_this, app_state) {
         temp_btn =
           <TouchableOpacity onPress={cart_btn.bind(this, parent_this,
                                           this_item.id, false, app_state)}
-                        style={[styles.button, {backgroundColor: '#36f'}]}>
+                        style={[styles.button, {backgroundColor: '#1a8fff'}]}>
             <Text style={{textAlign: 'center', color: 'white'}}>
               {'$'+this_item.price + '  |  '}
             </Text>

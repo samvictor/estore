@@ -14,9 +14,8 @@ import TextInputState from 'react-native/lib/TextInputState';
 
 import styles from './Styles';
 
-// TODO: check mark on password should log in
 // TODO: if password there, tab on email should log in
-//TODO: switching fields closes keyboard
+//TODO: forgot your password?
 
 
 export default class Login extends Component<{}> {
@@ -66,6 +65,7 @@ export default class Login extends Component<{}> {
     return (
       <View style={[{flex: 1, width: '100%'}]}>
         <ScrollView style={[styles.scroll]}
+              keyboardShouldPersistTaps={true}
               contentContainerStyle={styles.scroll_container}>
           <View style={{width: '100%', height:10, backgroundColor: 'white'}}>
           </View>

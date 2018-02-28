@@ -43,7 +43,7 @@ export default class Cart extends Component<{}> {
 
   async accept_press () {
     this.props.set_app_state({'snack_msg':'Working...',
-                            'snack_duration': 10000});
+                            'snack_duration': 100000});
     try {
       let res = await Braintree.accept_payment(this.props.app_state.user);
 

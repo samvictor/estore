@@ -4,6 +4,8 @@
    License: MIT
  */
 
+ // TODO: home screen quick actions / 3d touch
+
 import React, { Component } from 'react';
 import {
   AsyncStorage,
@@ -70,6 +72,8 @@ export default class App extends Component<{}> {
       'user_cart_loaded': false,
       'past_orders_dict': {},
       'past_orders': [],
+      'all_orders_dict': {},
+      'all_orders': [],
       'db': database,
       'storage': storage,
       'firebase': firebase,
@@ -226,6 +230,14 @@ export default class App extends Component<{}> {
     });
 
     firebase.auth().onAuthStateChanged((user) => {
+      // clear all data before either log off or switching users
+      this.setState({'user': null, 'user_is_admin': 'false',
+              'user_cart': [], 'user_cart_loaded': true,
+              'no_user': 'true', 'user_loaded': true,
+              'past_orders_dict': {}, 'past_orders': [],
+              'all_orders_dict': {}, 'all_orders': [],
+            });
+
       if (user) {
         // User is signed in.
         firebase.database().ref('estore').child('users/'+user.uid)
@@ -236,8 +248,34 @@ export default class App extends Component<{}> {
             }
             let user_data = snap.val();
             let for_state = {'user': user, 'user_loaded': true};
-            if (user_data['is_admin'] === 'true')
+            if (user_data['is_admin'] === 'true') {
               for_state['user_is_admin'] = 'true';
+
+              firebase.database().ref('estore').child('past_orders')
+                .on('value', (snap2) => {
+                  if (snap2.val() === null) {
+                    return;
+                  }
+                  let for_state2 = {'all_orders': [], 'all_orders_dict': {}};
+                  for_state2['all_orders_dict'] = snap2.val();
+
+                  for (var oid in for_state2['all_orders_dict']) {
+                    for_state2['all_orders'].push(for_state2['all_orders_dict'][oid]);
+                  }
+
+                  for_state2['all_orders'].sort(function (b, a) {
+                    if (a.time < b.time)
+                      return -1;
+
+                    if (a.time > b.time)
+                      return 1;
+
+                    return 0;
+                  });
+
+                  this.setState(for_state2);
+                });
+            }
 
             let temp_cart = [];
             if (user_data['cart'] === undefined)
@@ -272,13 +310,6 @@ export default class App extends Component<{}> {
 
             this.setState(for_state);
           });
-        } else {
-          // No user is signed in.
-          this.setState({'user': null, 'user_is_admin': 'false',
-                  'user_cart': [], 'user_cart_loaded': true,
-                  'no_user': 'true', 'user_loaded': true,
-                  'past_orders_dict': {}, 'past_orders': [],
-                });
         }
       });
 

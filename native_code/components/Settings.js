@@ -11,7 +11,7 @@ import {
 import TextInputState from 'react-native/lib/TextInputState'
 
 import styles from './Styles';
-
+// TODO: <Text style={settings_styles.btn_space}>New Item Notifications Coming Soon</Text>
 
 export default class Settings extends Component<{}> {
   constructor(props){
@@ -56,8 +56,7 @@ export default class Settings extends Component<{}> {
             });
           }}
         />
-      </View>,
-      <Text style={settings_styles.btn_space}>New Item Notifications Coming Soon</Text>];
+      </View>];
 
     return (
       <View style={[styles.container, {backgroundColor: 'white'}]}>
@@ -87,7 +86,7 @@ export default class Settings extends Component<{}> {
           </View>
           <Text style={[{color: '#888', fontSize: 10, textAlign: 'center'},
                           settings_styles.btn_space]}>
-            version 0.12
+            version 0.14
           </Text>
         </View>
         <View style={{flex: 1}} />
