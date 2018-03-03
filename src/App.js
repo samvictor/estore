@@ -9,7 +9,6 @@
 //TODO: email mobile keyboard
 //TODO: search, user order history, admin order history
 //TODO: update banner with blurred background image
-//TODO: reload in cart fails
 //TODO: login working...
 
 
@@ -31,6 +30,7 @@ import Navbar from './Components/Navbar'
 import Home from './Components/Home'
 import About from './Components/About'
 import Search from './Components/Search'
+import History from './Components/History'
 import Login from './Components/Login'
 import Alerts from './Components/Alerts'
 import Admin from './Components/Admin'
@@ -70,6 +70,10 @@ class App extends Component {
       'no_user': null,
       'user_cart': [],
       'user_cart_loaded': false,
+      'past_orders': [],
+      'past_orders_dict': {},
+      'all_orders': [],
+      'all_orders_dict': {},
     }
   }
 
@@ -115,11 +119,23 @@ class App extends Component {
                     db={this.state.db}
                     user_cart={this.state.user_cart}/>
           )} />
+          <Route path="/history" render={() => (
+            <History items={this.state.items}
+                    user={this.state.user}
+                    db={this.state.db}
+                    user_cart={this.state.user_cart}
+                    user_is_admin={this.state.user_is_admin}
+                    past_orders={this.state.past_orders}
+                    past_orders_dict={this.state.past_orders_dict}
+                    all_orders={this.state.all_orders}
+                    all_orders_dict={this.state.all_orders_dict}/>
+          )} />
           <Route path="/login" render={() => (
             <Login user={this.state.user}/>
           )} />
           <Route path="/admin" render={() => (
-            <Admin user={this.state.user} user_is_admin={this.state.user_is_admin}
+            <Admin user={this.state.user}
+                  user_is_admin={this.state.user_is_admin}
                   storage={this.state.storage}
                   db={this.state.db}/>
           )} />
@@ -162,6 +178,11 @@ class App extends Component {
     });
 
     firebase.auth().onAuthStateChanged((user) => {
+      // either way, clear old data
+      this.setState({'user': null, 'user_is_admin': 'false',
+              'user_cart': [], 'user_cart_loaded': true,
+              'no_user': 'true', 'past_orders': [], 'past_orders_dict': {},
+              'all_orders': [], 'all_orders_dict': {}});
       if (user) {
         // User is signed in.
         this.state.db.child('users/'+user.uid).on('value', (snap) => {
@@ -171,8 +192,34 @@ class App extends Component {
           }
           let user_data = snap.val();
           let for_state = {'user': user};
-          if (user_data['is_admin'] === 'true')
+          if (user_data['is_admin'] === 'true') {
             for_state['user_is_admin'] = 'true';
+
+            firebase.database().ref('estore').child('past_orders')
+              .on('value', (snap2) => {
+                if (snap2.val() === null) {
+                  return;
+                }
+                let for_state2 = {'all_orders': [], 'all_orders_dict': {}};
+                for_state2['all_orders_dict'] = snap2.val();
+
+                for (var oid in for_state2['all_orders_dict']) {
+                  for_state2['all_orders'].push(for_state2['all_orders_dict'][oid]);
+                }
+
+                for_state2['all_orders'].sort(function (b, a) {
+                  if (a.time < b.time)
+                    return -1;
+
+                  if (a.time > b.time)
+                    return 1;
+
+                  return 0;
+                });
+
+                this.setState(for_state2);
+              });
+          }
 
 
           let temp_cart = [];
@@ -186,6 +233,25 @@ class App extends Component {
           }
           for_state['user_cart_loaded'] = true;
           for_state['no_user'] = 'false';
+
+          for_state['past_orders'] = [];
+          for_state['past_orders_dict'] = {};
+          if (user_data['past_orders'] !== undefined) {
+            for_state['past_orders_dict'] = user_data['past_orders'];
+
+            for (var oid in user_data['past_orders']) {
+              for_state['past_orders'].push(user_data['past_orders'][oid]);
+            }
+            for_state['past_orders'].sort(function (b, a) {
+              if (a.time < b.time)
+                return -1;
+
+              if (a.time > b.time)
+                return 1;
+
+              return 0;
+            });
+          }
 
           this.setState(for_state);
         });
