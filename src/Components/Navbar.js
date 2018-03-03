@@ -4,16 +4,6 @@ import {Route, Link} from 'react-router-dom';
 /*global $*/
 
 class Navbar extends Component {
-  signOut() {
-    firebase.auth().signOut().then(function() {
-      // Sign-out successful.
-      $('#alert_success').text('You are logged out')
-          .fadeIn().delay(3000).fadeOut();
-    }).catch(function(error) {
-      console.log('signout failed', error);
-    });
-  }
-
   search_keyup(e) {
     let code = e.which;
     if(code === 13) {
@@ -72,8 +62,21 @@ class Navbar extends Component {
         <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Login / Signup</button>
       </Link>;
     else
-      login_btn = <button id="logout" className="btn btn-outline-danger my-2 my-sm-0"
-                      type="submit" onClick={this.signOut}>Logout</button>;
+      login_btn = <Route render={({history}) => (
+                    <button id="logout" className="btn btn-outline-danger my-2 my-sm-0"
+                        type="submit" onClick={() => {
+                            firebase.auth().signOut().then(function() {
+                              // Sign-out successful.
+                              $('#alert_success').text('You are logged out')
+                                  .fadeIn().delay(3000).fadeOut();
+                              history.push('/home');
+                            }).catch(function(error) {
+                              console.log('signout failed', error);
+                            });
+                          }}>
+                      Logout
+                    </button>
+                  )} />;
 
     return (
       <nav id="main_navbar" className="navbar navbar-expand-md collapse navbar-light bg-light">

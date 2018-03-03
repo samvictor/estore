@@ -5,6 +5,21 @@ import {Redirect} from 'react-router-dom';
 /*global $*/
 
 class Cart extends Component {
+  constructor(props) {
+    super(props);
+
+    let from_handle_props = this.handle_props(this.props);
+    let items_xml = from_handle_props[0];
+    let price = from_handle_props[1];
+
+    this.state = {
+      'price': price,
+      'cart': this.props.user_cart,
+      'items': this.props.items_dict,
+      'items_xml': items_xml,
+    };
+  }
+
   handle_props(props) {
     let price = 0;
     let items = props.items_dict;
@@ -44,7 +59,7 @@ class Cart extends Component {
           <em className="item_desc" title={this_item.description}>{short_description}</em><br/>
           <h5 className="cart_price">${this_item.price}</h5>
           <button className="btn btn-outline-danger cart_remove"
-                  item_id={this_item.id}>
+                  item_id={this_item.id} onClick={this.remove_btn.bind(this, this_item.id)}>
             Remove Item
           </button>
         </div>
@@ -53,19 +68,26 @@ class Cart extends Component {
     return [for_ret, price];
   }
 
-  constructor(props) {
-    super(props);
+  // call when remove from cart btn pressed
+  remove_btn (item_id) {
+    let user = this.props.user;
+    if(user === null) {
+      $('#alert_danger').text('Please log in before using cart')
+          .fadeIn().delay(5000).fadeOut();
+      return;
+    }
 
-    let from_handle_props = this.handle_props(this.props);
-    let items_xml = from_handle_props[0];
-    let price = from_handle_props[1];
+    let for_db = {};
+    for_db['cart/'+item_id] = null;
 
-    this.state = {
-      'price': price,
-      'cart': this.props.user_cart,
-      'items': this.props.items_dict,
-      'items_xml': items_xml,
-    };
+    this.props.db.child('/users/'+user.uid).update(for_db)
+    .then(function(){
+      $('#alert_success')
+              .text('Item removed from cart')
+              .fadeIn().delay(1000).fadeOut();
+    }).catch(function(error){
+      $('#alert_danger').text(error.message).fadeIn().delay(7000).fadeOut();
+    });
   }
 
   componentWillReceiveProps(next_props) {
@@ -78,6 +100,28 @@ class Cart extends Component {
       'cart': next_props.user_cart,
       'items': next_props.items_dict,
       'items_xml': items_xml,
+    });
+  }
+
+  handle_submit(dropinInstance){
+    var user_cart = this.props.user_cart;
+    var user = this.props.user;
+
+    if (user_cart.length === 0){
+      $('#alert_danger').text('Cart is empty')
+        .fadeIn().delay(2000).fadeOut();
+      return;
+    }
+    dropinInstance.requestPaymentMethod().then(function (payload) {
+      $.post('https://us-central1-estore-7e485.cloudfunctions.net/checkout/',
+        {'uid': user.uid, 'email': user.email,
+                'nonce': payload.nonce})
+        .done(function(checkout_data){
+          console.log('checkout data', checkout_data);
+        });
+    }).catch(function (err) {
+      // Handle errors in requesting payment method
+      console.log('requesting payment method: ', err);
     });
   }
 
@@ -122,28 +166,6 @@ class Cart extends Component {
         </div>
       </div>
     );
-  }
-
-  handle_submit(dropinInstance){
-    var user_cart = this.props.user_cart;
-    var user = this.props.user;
-
-    if (user_cart.length === 0){
-      $('#alert_danger').text('Cart is empty')
-        .fadeIn().delay(2000).fadeOut();
-      return;
-    }
-    dropinInstance.requestPaymentMethod().then(function (payload) {
-      $.post('https://us-central1-estore-7e485.cloudfunctions.net/checkout/',
-        {'uid': user.uid, 'email': user.email,
-                'nonce': payload.nonce})
-        .done(function(checkout_data){
-          console.log('checkout data', checkout_data);
-        });
-    }).catch(function (err) {
-      // Handle errors in requesting payment method
-      console.log('requesting payment method: ', err);
-    });
   }
 
   componentDidMount(){

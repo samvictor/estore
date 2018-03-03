@@ -181,7 +181,7 @@ class App extends Component {
       // either way, clear old data
       this.setState({'user': null, 'user_is_admin': 'false',
               'user_cart': [], 'user_cart_loaded': true,
-              'no_user': 'true', 'past_orders': [], 'past_orders_dict': {},
+              'no_user': null, 'past_orders': [], 'past_orders_dict': {},
               'all_orders': [], 'all_orders_dict': {}});
       if (user) {
         // User is signed in.
