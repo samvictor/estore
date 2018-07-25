@@ -86,7 +86,7 @@ export default class Settings extends Component<{}> {
           </View>
           <Text style={[{color: '#888', fontSize: 10, textAlign: 'center'},
                           settings_styles.btn_space]}>
-            version 0.15
+            version 0.16
           </Text>
         </View>
         <View style={{flex: 1}} />

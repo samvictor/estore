@@ -44,11 +44,11 @@ export default class App extends Component<{}> {
 
     try {
       firebase.initializeApp({
-        apiKey: "AIzaSyCI7wGvpUOMSY-h9tHoJogBmEmhoZe0U_A",
-        authDomain: "estore-7e485.firebaseapp.com",
-        databaseURL: "https://estore-7e485.firebaseio.com",
-        projectId: "estore-7e485",
-        storageBucket: "estore-7e485.appspot.com",
+        apiKey: "AIzaSyB8khvBvOf4--34UfJlvUqKB10ASpKejOo",
+        authDomain: "saminniss-df971.firebaseapp.com",
+        databaseURL: "https://saminniss-df971.firebaseio.com",
+        projectId: "saminniss-df971",
+        storageBucket: "saminniss-df971.appspot.com",
       });
     }
     catch(e){}
